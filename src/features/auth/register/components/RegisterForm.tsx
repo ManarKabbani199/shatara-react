@@ -54,7 +54,7 @@ export default function RegisterForm() {
 
                 setMessage("تم إنشاء الحساب بنجاح");
 
-                window.location.href = "/";
+                window.location.href = "/home";
             } else {
                 setMessage(data.message || "فشل إنشاء الحساب");
             }

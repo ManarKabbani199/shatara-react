@@ -40,7 +40,7 @@ export default function LoginForm() {
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
                 alert("تم تسجيل الدخول بنجاح");
-                window.location.href = "/";
+                window.location.href = "/home";
             } else {
                 alert(data.message || "فشل تسجيل الدخول");
             }

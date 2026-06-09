@@ -1,21 +1,27 @@
-import { Navbar } from '@/components/layout/navbar';
-import { Footer } from '@/components/layout/footer';
-import { HeroSection } from '@/features/home/components/hero-section';
-import { StoreSection } from '@/features/home/components/store-section';
-import { JoinGuideSectionWrapper } from '@/features/home/components/join-guide-section-wrapper';
+import { LandingNavbar } from '@/features/landing/components/landing-navbar';
+import { LandingHero } from '@/features/landing/components/landing-hero';
+import { StatsSection } from '@/features/landing/components/stats-section';
+import { ShataraPreview } from '@/features/landing/components/shatara-preview';
+import { LandingFooter } from '@/features/landing/components/landing-footer';
+import { VisitorTracker } from '@/features/visitor/components/visitor-tracker';
+import { VideoPopup } from '@/features/landing/components/video-popup';
 
-export default function RootPage() {
+export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#EFF3F7]">
-      <Navbar />
-      <main className="flex-1 flex flex-col">
-        <div className="flex flex-col gap-4 px-4 md:px-6 py-4 max-w-6xl mx-auto w-full">
-          <HeroSection />
-          <StoreSection />
-          <JoinGuideSectionWrapper />
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <main className="flex-1 flex flex-col min-h-screen bg-white">
+      <LandingNavbar />
+      <VisitorTracker />
+
+      <div className="flex-1 relative">
+        <LandingHero />
+        <StatsSection />
+        <ShataraPreview />
+      </div>
+
+      <LandingFooter />
+
+      {/* Auto-play intro video popup — shown once per session */}
+      <VideoPopup />
+    </main>
   );
 }
