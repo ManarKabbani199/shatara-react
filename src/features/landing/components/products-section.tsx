@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HiShoppingCart, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
@@ -25,10 +25,29 @@ const products: Product[] = [
 export function ProductsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // In RTL, scrollLeft can be negative in some browsers
+    const scrollLeft = Math.abs(el.scrollLeft);
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollPrev(scrollLeft > 8);
+    setCanScrollNext(scrollLeft < maxScroll - 8);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => el.removeEventListener('scroll', updateScrollState);
+  }, [updateScrollState]);
 
   const scroll = (direction: 'prev' | 'next') => {
     if (!scrollRef.current) return;
-    // RTL: prev = scroll right (positive), next = scroll left (negative)
     const amount = 260;
     scrollRef.current.scrollBy({
       left: direction === 'prev' ? amount : -amount,
@@ -146,17 +165,29 @@ export function ProductsSection() {
 
         {/* ── Navigation arrows — centered below ── */}
         <div className="flex items-center justify-center gap-3 mt-8">
+          {/* Prev (right arrow) — active when we can scroll back */}
           <button
             onClick={() => scroll('prev')}
             aria-label="السابق"
-            className="w-10 h-10 rounded-full bg-[#AB86B9] text-white flex items-center justify-center hover:bg-[#9a73a8] active:scale-95 transition-all shadow-md"
+            disabled={!canScrollPrev}
+            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${
+              canScrollPrev
+                ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
+                : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+            }`}
           >
             <HiChevronRight className="w-5 h-5" />
           </button>
+          {/* Next (left arrow) — active when we can scroll forward */}
           <button
             onClick={() => scroll('next')}
             aria-label="التالي"
-            className="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center hover:bg-[#AB86B9] hover:text-white active:scale-95 transition-all shadow-sm"
+            disabled={!canScrollNext}
+            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${
+              canScrollNext
+                ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
+                : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+            }`}
           >
             <HiChevronLeft className="w-5 h-5" />
           </button>
