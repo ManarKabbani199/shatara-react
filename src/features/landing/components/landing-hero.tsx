@@ -36,7 +36,7 @@ export function LandingHero() {
           <div className="flex justify-center pt-4">
             <Link
               href="#play"
-              className="flex items-center gap-3 px-8 py-3 bg-[#AB86B9] text-white text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all"
+              className="flex items-center gap-3 px-8 py-3 bg-[#AB86B9] text-white text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all rounded-xl"
             >
               <FaChessKnight className="w-5 h-5" />
               <span>إلعب الآن</span>

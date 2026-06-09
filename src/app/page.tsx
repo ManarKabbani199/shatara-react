@@ -2,6 +2,8 @@ import { LandingNavbar } from '@/features/landing/components/landing-navbar';
 import { LandingHero } from '@/features/landing/components/landing-hero';
 import { StatsSection } from '@/features/landing/components/stats-section';
 import { ShataraPreview } from '@/features/landing/components/shatara-preview';
+import { ProductsSection } from '@/features/landing/components/products-section';
+import { GuideSection } from '@/features/landing/components/guide-section';
 import { LandingFooter } from '@/features/landing/components/landing-footer';
 import { VisitorTracker } from '@/features/visitor/components/visitor-tracker';
 import { VideoPopup } from '@/features/landing/components/video-popup';
@@ -16,6 +18,8 @@ export default function LandingPage() {
         <LandingHero />
         <StatsSection />
         <ShataraPreview />
+        <ProductsSection />
+        <GuideSection />
       </div>
 
       <LandingFooter />

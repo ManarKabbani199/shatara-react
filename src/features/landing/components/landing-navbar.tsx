@@ -6,11 +6,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { SITE, URLS } from '@/config/constants';
 import { MdClose } from 'react-icons/md';
 
-const navLinks = [
-  { name: 'إلعب الآن', href: '#play' },
-  { name: 'من نحن', href: '#about' },
-];
-
 export function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -35,7 +30,7 @@ export function LandingNavbar() {
       >
         <nav className="max-w-7xl mx-auto px-4 py-4" dir="rtl">
           {/* Desktop */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center justify-between w-full">
             <Link href="/" className="shrink-0">
               <Image
                 src="/assets/images/logoapp.png"
@@ -46,56 +41,51 @@ export function LandingNavbar() {
               />
             </Link>
 
-            <div className="flex items-center gap-6">
-              <a
-                href={URLS.guide}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-base font-bold transition-colors hover:opacity-70"
+            <div className="flex items-center gap-10">
+              <Link
+                href="#play"
+                className="text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
-                تعرف على شطارة
-              </a>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-base font-bold transition-colors hover:opacity-70"
-                  style={{ color: '#6B4E45' }}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex-1" />
-
-            <div className="flex items-center gap-6">
+                إلعب الآن
+              </Link>
               <a
                 href={URLS.store}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-2 rounded bg-[#AB86B9] text-white font-bold text-sm shadow-sm hover:bg-[#AB86B9]/90 transition-all"
+                className="text-base font-bold transition-colors hover:opacity-75"
+                style={{ color: '#6B4E45' }}
               >
                 متجر شطارة
               </a>
+              <a
+                href={URLS.club}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base font-bold transition-colors hover:opacity-75"
+                style={{ color: '#6B4E45' }}
+              >
+                نادي شطارة
+              </a>
+              <a
+                href={URLS.guide}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base font-bold transition-colors hover:opacity-75"
+                style={{ color: '#6B4E45' }}
+              >
+                دليل شطارة
+              </a>
+            </div>
 
+            <div className="shrink-0">
               <Link
                 href="/login"
-                className="px-6 py-2 rounded bg-[#AB86B9] text-white font-bold text-sm shadow-sm hover:bg-[#AB86B9]/90 transition-all"
+                className="px-8 py-2 rounded-xl text-white font-bold text-lg shadow transition-all flex items-center justify-center hover:opacity-90"
+                style={{ backgroundColor: '#AB86B9' }}
               >
                 تسجيل الدخول
               </Link>
-
-              <button className="text-gray-700 hover:opacity-75 transition-opacity flex items-center justify-center">
-                <Image
-                  src="/assets/images/Category.png"
-                  alt="قائمة"
-                  width={28}
-                  height={28}
-                  className="object-contain"
-                />
-              </button>
             </div>
           </div>
 
@@ -152,6 +142,31 @@ export function LandingNavbar() {
             </div>
 
             <div className="flex flex-col p-3 gap-0.5">
+              <Link
+                href="#play"
+                onClick={closeMobile}
+                className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
+              >
+                إلعب الآن
+              </Link>
+              <a
+                href={URLS.store}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobile}
+                className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
+              >
+                متجر شطارة
+              </a>
+              <a
+                href={URLS.club}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobile}
+                className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
+              >
+                نادي شطارة
+              </a>
               <a
                 href={URLS.guide}
                 target="_blank"
@@ -159,35 +174,15 @@ export function LandingNavbar() {
                 onClick={closeMobile}
                 className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
               >
-                تعرف على شطارة
+                دليل شطارة
               </a>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={closeMobile}
-                  className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
-                >
-                  {link.name}
-                </Link>
-              ))}
 
               <hr className="border-brand-brown/10 my-2" />
-
-              <a
-                href={URLS.store}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#AB86B9] text-white font-bold text-base hover:bg-[#AB86B9]/90 transition-all"
-                onClick={closeMobile}
-              >
-                متجر شطارة
-              </a>
 
               <Link
                 href="/login"
                 onClick={closeMobile}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-brand-purple text-white font-bold text-base"
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand-purple text-white font-bold text-base"
               >
                 تسجيل الدخول
               </Link>
