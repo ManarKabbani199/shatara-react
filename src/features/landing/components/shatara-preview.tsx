@@ -29,7 +29,7 @@ export function ShataraPreview() {
           {/* Right Column: Shatara Board Preview */}
           <div className="lg:col-span-8 bg-[#AB86B9] rounded-[24px] p-4 sm:p-6 shadow-xl">
             <div className="bg-white rounded-[16px] overflow-hidden flex flex-col lg:flex-row">
-              
+
               {/* Shatara Board Side */}
               <div className="w-full lg:flex-[2.5] flex flex-col bg-[#AB86B9]">
                 {/* Top Player Info */}
@@ -76,11 +76,10 @@ export function ShataraPreview() {
                 </div>
                 <div className="max-h-[250px] lg:max-h-none lg:flex-1 overflow-y-auto">
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                    <div 
-                      key={i} 
-                      className={`flex items-center justify-between px-5 py-3 text-[11px] font-bold transition-colors ${
-                        i % 2 === 0 ? 'bg-gray-50/80' : 'bg-white'
-                      }`}
+                    <div
+                      key={i}
+                      className={`flex items-center justify-between px-5 py-3 text-[11px] font-bold transition-colors ${i % 2 === 0 ? 'bg-gray-50/80' : 'bg-white'
+                        }`}
                     >
                       <span className="text-gray-400">32</span>
                       <span className="text-gray-600">Z2_123 {i}</span>

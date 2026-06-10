@@ -127,11 +127,10 @@ export function ProductsSection() {
 
                       {/* "أضف للسلة" — slides up on hover */}
                       <div
-                        className={`absolute inset-x-3 bottom-3 transition-all duration-300 ${
-                          hoveredId === product.id
+                        className={`absolute inset-x-3 bottom-3 transition-all duration-300 ${hoveredId === product.id
                             ? 'opacity-100 translate-y-0'
                             : 'opacity-0 translate-y-3 pointer-events-none'
-                        }`}
+                          }`}
                       >
                         <button className="w-full flex items-center justify-center gap-2 bg-[#AB86B9] hover:bg-[#9a73a8] text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-lg">
                           <HiShoppingCart className="w-3.5 h-3.5" />
@@ -170,11 +169,10 @@ export function ProductsSection() {
             onClick={() => scroll('prev')}
             aria-label="السابق"
             disabled={!canScrollPrev}
-            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${
-              canScrollPrev
+            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${canScrollPrev
                 ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
                 : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-            }`}
+              }`}
           >
             <HiChevronRight className="w-5 h-5" />
           </button>
@@ -183,11 +181,10 @@ export function ProductsSection() {
             onClick={() => scroll('next')}
             aria-label="التالي"
             disabled={!canScrollNext}
-            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${
-              canScrollNext
+            className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${canScrollNext
                 ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
                 : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-            }`}
+              }`}
           >
             <HiChevronLeft className="w-5 h-5" />
           </button>
