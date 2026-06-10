@@ -3,7 +3,6 @@
 import type React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaChessKnight } from 'react-icons/fa6';
 
 export function LandingHero() {
   return (
@@ -38,7 +37,13 @@ export function LandingHero() {
               href="#play"
               className="flex items-center gap-3 px-8 py-3 bg-[#AB86B9] text-white text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all rounded-xl"
             >
-              <FaChessKnight className="w-5 h-5" />
+              <Image
+                src="/assets/images/Group.png"
+                alt="شعار اللعب"
+                width={20}
+                height={20}
+                className="w-5 h-5 object-contain"
+              />
               <span>إلعب الآن</span>
             </Link>
           </div>
