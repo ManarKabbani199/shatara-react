@@ -42,11 +42,11 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                         />
                     </div>
 
-                    {/* ── DESKTOP CARD — with card background image ── */}
+                    {/* ── DESKTOP CARD ── */}
                     <div
-                        className={`hidden lg:flex ${defaultTab === "login" ? "py-14" : "py-10"} w-[390px] shrink-0 flex-col justify-center`}
+                        className={`hidden lg:flex ${defaultTab === "login" ? "py-14" : "py-10"} w-[390px] shrink-0 flex-col justify-center rounded-3xl shadow-2xl`}
                         style={{
-                            backgroundImage: "url('/assets/images/Left%20side%208%20Column.png')",
+                            backgroundImage: "url('/assets/images/backhome.png')",
                             backgroundSize: "100% 100%",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
@@ -94,11 +94,10 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("login")}
-                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${
-                                    activeTab === "login"
+                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "login"
                                         ? "bg-[#A67BC4] text-white shadow-sm"
                                         : "text-[#8C7467] hover:text-[#5C4033]"
-                                }`}
+                                    }`}
                             >
                                 تسجيل الدخول
                             </button>
@@ -106,11 +105,10 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("register")}
-                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${
-                                    activeTab === "register"
+                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "register"
                                         ? "bg-[#A67BC4] text-white shadow-sm"
                                         : "text-[#8C7467] hover:text-[#5C4033]"
-                                }`}
+                                    }`}
                             >
                                 إنشاء حساب
                             </button>

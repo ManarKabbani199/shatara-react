@@ -79,7 +79,7 @@ export function ProductsSection() {
 
             <Link
               href="/store"
-              className="inline-flex items-center gap-1 mt-4 text-sm font-normal text-[#AB86B9] border-b border-[#AB86B9] pb-0.5 hover:text-[#6B4E45] hover:border-[#6B4E45] transition-all"
+              className="inline-flex items-center gap-1 mt-4 text-base font-bold text-[#AB86B9] border-b border-[#AB86B9] pb-0.5 hover:text-[#6B4E45] hover:border-[#6B4E45] transition-all"
             >
               <span>إلى المتجر</span>
               <span className="text-xs">↗</span>

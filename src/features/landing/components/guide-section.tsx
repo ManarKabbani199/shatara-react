@@ -13,7 +13,7 @@ export function GuideSection() {
         <img
           src="/assets/images/Left side 8 Column.png"
           alt="Panel"
-          className="max-h-[80vh] w-auto object-contain rounded-2xl shadow-2xl"
+          className="max-h-[80vh] w-auto object-contain rounded-2xl shadow-2xl scale-110 md:scale-115 transition-all duration-300"
         />
       </div>
     </section>

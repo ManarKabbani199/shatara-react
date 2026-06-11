@@ -21,8 +21,8 @@ export function useVisitor() {
             userAgent: navigator.userAgent,
           }),
         });
-      } catch (error) {
-        console.error("Visitor log error:", error);
+      } catch {
+        // silently ignore — server may be unavailable in dev
       }
     };
 
