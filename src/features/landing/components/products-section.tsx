@@ -65,20 +65,24 @@ export function ProductsSection() {
 
           {/* ── Heading column (right in RTL) ── */}
           <div className="lg:w-[260px] xl:w-[300px] flex-shrink-0 text-right lg:pt-4">
-            <h2 className="text-[2rem] sm:text-[2.4rem] font-bold leading-[1.4] text-[#6B4E45]">
-              إكتشف منتجات
-              <br />
-              <span className="text-[#AB86B9]">شطارة ♞</span>
-              <br />
+            <h2 className="text-[2.2rem] font-normal leading-[1.4] text-[#6B4E45]">
+              إكتشف
+              <div className="flex items-center justify-start gap-2 text-[#AB86B9] my-1">
+                <img
+                  src="/assets/images/Frame 1000008188.png"
+                  alt="لوجو"
+                  className="h-[1.1em] w-auto object-contain inline-block"
+                />
+              </div>
               المميزة
             </h2>
 
             <Link
               href="/store"
-              className="inline-flex items-center gap-1.5 mt-3 text-sm font-bold text-[#AB86B9] hover:text-[#6B4E45] transition-colors group"
+              className="inline-flex items-center gap-1 mt-4 text-sm font-normal text-[#AB86B9] border-b border-[#AB86B9] pb-0.5 hover:text-[#6B4E45] hover:border-[#6B4E45] transition-all"
             >
               <span>إلى المتجر</span>
-              <HiChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              <span className="text-xs">↗</span>
             </Link>
           </div>
 
