@@ -51,7 +51,7 @@ export function LandingHero() {
       </div>
 
       {/* Hero Image Area - Carefully blending the sides and bottom */}
-      <div className="relative w-full h-[500px] md:h-[750px] lg:h-[850px] -mt-24 md:-mt-32 lg:-mt-40 anim-fade-up">
+      <div className="relative w-full h-[320px] sm:h-[420px] md:h-[750px] lg:h-[850px] -mt-12 sm:-mt-16 md:-mt-32 lg:-mt-40 anim-fade-up">
         {/* Subtle Edge Overlays */}
         <div className="absolute inset-0 z-10 pointer-events-none">
           {/* Top fade to blend with content above */}

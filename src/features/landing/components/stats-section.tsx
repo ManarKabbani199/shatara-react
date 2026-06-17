@@ -56,7 +56,7 @@ export function StatsSection() {
           </div>
 
           {/* Stats Grid */}
-          <div className="flex-1 flex flex-row items-center justify-end gap-10 sm:gap-16 md:gap-20">
+          <div className="flex-1 flex flex-wrap items-center justify-center md:justify-end gap-8 sm:gap-12 md:gap-16 lg:gap-20 w-full">
             {stats.map((stat) => {
               const Icon = stat.icon;
               return (

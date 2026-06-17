@@ -1,9 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { SITE } from '@/config/constants';
 import { JsonLd } from '@/components/layout/json-ld';
 import GoogleProvider from '@/components/providers/GoogleProvider';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#FFFFFF',
+};
 
 export const metadata: Metadata = {
   title: {

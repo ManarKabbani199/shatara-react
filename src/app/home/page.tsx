@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/footer';
 import { HeroSection } from '@/features/home/components/hero-section';
 import { StoreSection } from '@/features/home/components/store-section';
 import { JoinGuideSectionWrapper } from '@/features/home/components/join-guide-section-wrapper';
+import { WelcomeBanner } from '@/features/home/components/welcome-banner';
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Navbar />
       <main className="flex-1 flex flex-col">
         <div className="flex flex-col gap-4 px-4 md:px-6 py-4 max-w-6xl mx-auto w-full">
+          <WelcomeBanner />
           <HeroSection />
           <StoreSection />
           <JoinGuideSectionWrapper />

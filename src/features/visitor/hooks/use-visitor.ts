@@ -11,7 +11,7 @@ export function useVisitor() {
 
     const logVisitor = async () => {
       try {
-        await fetch("https://shatara.sa/shatara_api/visitor.php", {
+        await fetch("/api/visitor", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
