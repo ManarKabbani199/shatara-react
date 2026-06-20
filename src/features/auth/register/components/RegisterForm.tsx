@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import LoginInput from "../../login/components/LoginInput";
+import SocialLoginButton from "../../login/components/SocialLoginButton";
 
 export default function RegisterForm() {
     const [name, setName] = useState("");
@@ -12,19 +14,17 @@ export default function RegisterForm() {
     const [password, setPassword] = useState("");
     const [level, setLevel] = useState("مبتدئ");
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setMessage("");
 
         if (!name.trim() || !username.trim() || !email.trim() || !password.trim()) {
-            setMessage("يرجى تعبئة جميع الحقول المطلوبة");
+            alert("يرجى تعبئة جميع الحقول المطلوبة");
             return;
         }
 
         if (password.length < 6) {
-            setMessage("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+            alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
             return;
         }
 
@@ -52,15 +52,14 @@ export default function RegisterForm() {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
-                setMessage("تم إنشاء الحساب بنجاح");
-
+                alert("تم إنشاء الحساب بنجاح");
                 window.location.href = "/home";
             } else {
-                setMessage(data.message || "فشل إنشاء الحساب");
+                alert(data.message || "فشل إنشاء الحساب");
             }
         } catch (error) {
             console.error("REGISTER ERROR:", error);
-            setMessage("حدث خطأ في الاتصال بالسيرفر");
+            alert("حدث خطأ في الاتصال بالسيرفر");
         } finally {
             setLoading(false);
         }
@@ -68,18 +67,29 @@ export default function RegisterForm() {
 
     return (
         <div className="flex flex-col w-full" dir="rtl">
+            <div className="w-full hidden lg:flex justify-center mb-10 select-none">
+                <Image
+                    src="/assets/images/logoapp.png"
+                    alt="شطارة"
+                    width={220}
+                    height={80}
+                    priority
+                    className="object-contain"
+                />
+            </div>
+
             <div className="w-full hidden lg:block text-center mb-5">
                 <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#5C4033" }}>
-                    إنشاء حساب جديد
+                    عضو جديد في شطارة!
                 </h1>
                 <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>
-                    أدخل بياناتك لإنشاء حساب في شطارة
+                    مرحبًا بك!، يمكنك الإنضمام إلينا عن طريق إنشاء حساب جديد
                 </p>
             </div>
 
             <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3" noValidate>
                 <LoginInput
-                    icon="username"
+                    icon="name"
                     type="text"
                     placeholder="الاسم الكامل"
                     value={name}
@@ -99,7 +109,7 @@ export default function RegisterForm() {
                 />
 
                 <LoginInput
-                    icon="username"
+                    icon="email"
                     type="email"
                     placeholder="البريد الإلكتروني"
                     value={email}
@@ -109,7 +119,7 @@ export default function RegisterForm() {
                 />
 
                 <LoginInput
-                    icon="username"
+                    icon="phone"
                     type="tel"
                     placeholder="رقم الهاتف"
                     value={phoneNumber}
@@ -130,19 +140,13 @@ export default function RegisterForm() {
                 <select
                     value={level}
                     onChange={(e) => setLevel(e.target.value)}
-                    className="w-full h-11 rounded-xl border border-gray-300 px-3 text-sm outline-none"
+                    className="w-full h-11 rounded-xl border border-[#E5D7CE] bg-white/70 backdrop-blur-sm px-3 text-sm outline-none text-right text-[#5C4033]"
                     style={{ color: "#6B4E45" }}
                 >
                     <option value="مبتدئ">مبتدئ</option>
                     <option value="متوسط">متوسط</option>
                     <option value="محترف">محترف</option>
                 </select>
-
-                {message && (
-                    <p className="text-center text-sm text-[#6B4E45]">
-                        {message}
-                    </p>
-                )}
 
                 <button
                     type="submit"
@@ -153,6 +157,16 @@ export default function RegisterForm() {
                     {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
                 </button>
             </form>
+
+            <div className="flex items-center w-full my-4 gap-3">
+                <div className="flex-1 h-px bg-gray-300" />
+                <span className="text-xs text-gray-400 whitespace-nowrap">أو عن طريق</span>
+                <div className="flex-1 h-px bg-gray-300" />
+            </div>
+
+            <div className="w-full" dir="ltr">
+                <SocialLoginButton />
+            </div>
 
             <p className="w-full mt-4 text-[13px] text-[#6B4E45] font-medium text-center">
                 لديك حساب؟{" "}

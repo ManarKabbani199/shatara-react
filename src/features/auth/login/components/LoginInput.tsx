@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, InputHTMLAttributes } from "react";
-import { Eye, EyeOff, AtSign, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, AtSign, Lock, Mail, User, Phone } from "lucide-react";
 
 interface LoginInputProps extends InputHTMLAttributes<HTMLInputElement> {
-    icon: "username" | "email" | "password";
+    icon: "username" | "email" | "password" | "name" | "phone";
     placeholder: string;
 }
 
@@ -29,8 +29,10 @@ export default function LoginInput({
         >
             {/* RIGHT: username/email or lock icon */}
             <div className="flex items-center justify-center w-10 h-full shrink-0 text-[#8C7467]">
+                {icon === "name" && <User size={18} strokeWidth={1.5} />}
                 {icon === "username" && <AtSign size={18} strokeWidth={1.5} />}
                 {icon === "email" && <Mail size={18} strokeWidth={1.5} />}
+                {icon === "phone" && <Phone size={18} strokeWidth={1.5} />}
                 {icon === "password" && <Lock size={18} strokeWidth={1.5} />}
             </div>
 

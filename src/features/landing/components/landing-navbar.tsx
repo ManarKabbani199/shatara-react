@@ -4,10 +4,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useCallback, useEffect } from 'react';
 import { SITE, URLS } from '@/config/constants';
-import { MdClose } from 'react-icons/md';
+import { MdClose, MdLogin, MdLogout } from 'react-icons/md';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, isLoggedIn, logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
+  const displayName = user?.name || user?.username;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
@@ -42,13 +50,15 @@ export function LandingNavbar() {
             </Link>
 
             <div className="flex items-center gap-10">
-              <Link
-                href="#play"
+              <a
+                href="https://shatara.sa/play/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
                 إلعب الآن
-              </Link>
+              </a>
               <a
                 href={URLS.store}
                 target="_blank"
@@ -78,14 +88,30 @@ export function LandingNavbar() {
               </a>
             </div>
 
-            <div className="shrink-0">
-              <Link
-                href="/login"
-                className="px-8 py-2 rounded-xl text-white font-bold text-lg shadow transition-all flex items-center justify-center hover:opacity-90"
-                style={{ backgroundColor: '#AB86B9' }}
-              >
-                تسجيل الدخول
-              </Link>
+            <div className="shrink-0 flex items-center gap-3">
+              {mounted && isLoggedIn ? (
+                <>
+                  <span className="hidden md:inline text-brand-brown font-bold text-sm">
+                    {displayName}
+                  </span>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-1.5 px-6 py-2 rounded-xl bg-brand-purple/10 text-brand-purple font-bold text-base transition-colors hover:bg-brand-purple hover:text-white"
+                  >
+                    <MdLogout className="w-5 h-5" />
+                    تسجيل الخروج
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-8 py-2 rounded-xl text-white font-bold text-lg shadow transition-all flex items-center justify-center hover:opacity-90"
+                  style={{ backgroundColor: '#AB86B9' }}
+                >
+                  <MdLogin className="w-5 h-5 ml-1.5" />
+                  تسجيل الدخول
+                </Link>
+              )}
             </div>
           </div>
 
@@ -142,13 +168,15 @@ export function LandingNavbar() {
             </div>
 
             <div className="flex flex-col p-3 gap-0.5">
-              <Link
-                href="#play"
+              <a
+                href="https://shatara.sa/play/"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={closeMobile}
                 className="px-4 py-3 rounded-xl text-brand-brown hover:bg-brand-purple/10 hover:text-brand-purple font-semibold text-base transition-all"
               >
                 إلعب الآن
-              </Link>
+              </a>
               <a
                 href={URLS.store}
                 target="_blank"
@@ -179,13 +207,24 @@ export function LandingNavbar() {
 
               <hr className="border-brand-brown/10 my-2" />
 
-              <Link
-                href="/login"
-                onClick={closeMobile}
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand-purple text-white font-bold text-base"
-              >
-                تسجيل الدخول
-              </Link>
+              {mounted && isLoggedIn ? (
+                <button
+                  onClick={() => { logout(); closeMobile(); }}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand-purple text-white font-bold text-base"
+                >
+                  <MdLogout className="w-5 h-5" />
+                  تسجيل الخروج
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={closeMobile}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand-purple text-white font-bold text-base"
+                >
+                  <MdLogin className="w-5 h-5" />
+                  تسجيل الدخول
+                </Link>
+              )}
             </div>
           </div>
         </>

@@ -22,16 +22,11 @@ export default function LoginForm() {
         setLoading(true);
 
         try {
-            const response = await fetch("https://shatara.sa/shatara_api/login.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: username.trim(),
-                    password: password.trim(),
-                }),
+            const params = new URLSearchParams({
+                username: username.trim(),
+                password: password.trim(),
             });
+            const response = await fetch(`https://shatara.sa/chess_api/login.php?${params.toString()}`);
 
             const data = await response.json();
 

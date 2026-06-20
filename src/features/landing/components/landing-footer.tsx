@@ -9,7 +9,7 @@ const footerLinks = {
   pages: [
     { name: 'الرئيسية', href: '/' },
     { name: 'تعرف على شطارة', href: '#guide' },
-    { name: 'إلعب الآن', href: '#play' },
+    { name: 'إلعب الآن', href: 'https://shatara.sa/play/', external: true },
     { name: 'من نحن', href: '#about' },
   ],
   socials: [
@@ -43,12 +43,23 @@ export function LandingFooter() {
               <ul className="space-y-4">
                 {footerLinks.pages.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-600 hover:text-[#AB86B9] font-bold text-base transition-colors"
-                    >
-                      {link.name}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-600 hover:text-[#AB86B9] font-bold text-base transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-gray-600 hover:text-[#AB86B9] font-bold text-base transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

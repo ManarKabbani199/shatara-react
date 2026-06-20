@@ -2,7 +2,6 @@
 
 import type React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export function LandingHero() {
   return (
@@ -33,8 +32,10 @@ export function LandingHero() {
 
           {/* CTA Button */}
           <div className="flex justify-center pt-4">
-            <Link
-              href="#play"
+            <a
+              href="https://shatara.sa/play/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 px-8 py-3 bg-[#AB86B9] text-white text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all rounded-xl"
             >
               <Image
@@ -45,7 +46,7 @@ export function LandingHero() {
                 className="w-5 h-5 object-contain"
               />
               <span>إلعب الآن</span>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

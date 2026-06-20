@@ -5,7 +5,9 @@ import { useAuth } from '@/features/auth/hooks/use-auth';
 export function WelcomeBanner() {
   const { user, isLoading, isLoggedIn } = useAuth();
 
-  if (isLoading || !isLoggedIn || !user?.name) {
+  const displayName = user?.name || user?.username;
+
+  if (isLoading || !isLoggedIn || !displayName) {
     return null;
   }
 
@@ -17,11 +19,11 @@ export function WelcomeBanner() {
     >
       <div className="flex items-center gap-3">
         <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-purple/15 text-brand-purple font-bold text-lg shrink-0">
-          {user.name.charAt(0)}
+          {displayName.charAt(0)}
         </span>
         <div className="flex flex-col">
           <h2 className="text-brand-brown font-bold text-base md:text-lg leading-tight">
-            مرحباً، {user.name}!
+            مرحباً، {displayName}!
           </h2>
           <p className="text-text-secondary text-sm leading-snug">
             سعداء بعودتك إلى شطارة.
