@@ -91,18 +91,18 @@ export function JoinGuideSection() {
   ];
 
   return (
-    <section className="w-full bg-surface-light py-6 px-4 md:px-6" dir="rtl">
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4">
+    <section className="w-full min-w-0 bg-surface-light py-4 sm:py-6 px-3 sm:px-4 md:px-6" dir="rtl">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-3 sm:gap-4">
         <div
           className="flex-[7] anim-fade-up"
           style={{ '--anim-delay': '0.25s' } as React.CSSProperties}
         >
-          <Card className="hover-lift">
-            <h2 className="text-brand-brown font-bold text-sm md:text-base mb-4 font-alexandria">
+          <Card className="hover-lift overflow-hidden">
+            <h2 className="text-brand-brown font-bold text-sm md:text-base mb-3 sm:mb-4 font-alexandria leading-relaxed">
               يرجى تسجيل بياناتك للانضمام إلى قائمة المهتمين بمشروع شطارة
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2.5">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 sm:gap-2.5 min-w-0">
               <Input
                 label="اسمك بالكامل"
                 placeholder="اسمك بالكامل"

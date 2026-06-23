@@ -36,6 +36,19 @@ yarn-error.log*
 # vercel
 .vercel
 
+# large binary files
+*.rar
+*.zip
+backg-base64.txt
+backg-optimized-base64.txt
+backg-optimized.png
+backg-q80.jpg
+backg-q85.jpg
+backg-q90.jpg
+
+# duplicate/backup project folder
+/shatara-develop/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

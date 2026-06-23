@@ -35,24 +35,24 @@ export function GuideCard() {
   return (
     <div
       ref={ref}
-      className="anim-fade-right"
+      className="anim-fade-right min-w-0"
       style={{ '--anim-delay': '0.35s' } as React.CSSProperties}
     >
       <Card className="overflow-hidden hover-lift">
-        <div className="flex items-center justify-between px-3 py-2.5">
-          <div className="flex items-center gap-1.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 py-2.5">
+          <div className="flex items-center gap-1.5 shrink-0">
             <MdMenuBook className="w-4 h-4 text-brand-brown" />
             <h3 className="text-brand-brown font-bold text-xs font-alexandria">
               دليل شطارة
             </h3>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <a
               href={URLS.store}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-xl bg-[#AB86B9] text-white font-bold text-xs shadow-sm hover:bg-[#AB86B9]/90 transition-all flex items-center gap-1"
+              className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl bg-[#AB86B9] text-white font-bold text-xs shadow-sm hover:bg-[#AB86B9]/90 transition-all flex items-center justify-center gap-1"
             >
               متجر شطارة
             </a>
@@ -61,7 +61,7 @@ export function GuideCard() {
               variant="green"
               size="sm"
               onClick={handleDownload}
-              className="rounded-xl px-3 py-1.5 text-xs pulse-glow"
+              className="flex-1 sm:flex-initial rounded-xl px-3 py-1.5 text-xs pulse-glow"
             >
               <MdDownload className="w-4 h-4 ms-1" />
               تحميل

@@ -1,0 +1,325 @@
+/* =====================================================
+   Tajar Store Builder - Product Card CSS Snippet
+   Source: https://shatarachess.com/
+   Paste this entire block into your Tajar CSS editor
+   ===================================================== */
+
+/* ---------- CSS Variables (safe fallbacks) ---------- */
+:root {
+    --main-color-one: #895ea6;
+    --secondary-color: #cccccc;
+    --secondary-text: #111111;
+    --text-main: #000000;
+    --starClr: #FF9017;
+    --borderClr: rgba(0, 0, 0, .10);
+    --light-gray-bg: #00000008;
+}
+
+/* ---------- Product Card Container ---------- */
+.product-card.global-card.product {
+    box-shadow: none;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    transition: all .3s;
+}
+
+/* ---------- Product Image Area ---------- */
+.product-head {
+    position: relative;
+    overflow: hidden;
+}
+
+a.product-img {
+    display: block;
+    padding-top: 100%;
+    position: relative;
+    background: var(--light-gray-bg);
+}
+
+.product-img img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    max-height: 100%;
+    width: auto;
+    transition: all .3s;
+}
+
+.product-card:hover .product-img img {
+    transform: translate(-50%, -50%) scale(1.03);
+}
+
+/* ---------- Badges (وصل حديثاً / جديد) ---------- */
+.product-badge-box {
+    max-width: 160px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 9;
+}
+
+[dir="rtl"] .product-badge-box {
+    left: auto;
+    right: 16px;
+}
+
+.product-badge {
+    background: #fff;
+    padding: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    border: 1px solid var(--borderClr);
+}
+
+/* ---------- Wishlist / Action Icons ---------- */
+.product-icons {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 9;
+}
+
+[dir="rtl"] .product-icons {
+    left: 16px;
+    right: auto;
+}
+
+.product-icons a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    color: var(--main-color-one);
+    padding: 10px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    transition: all .4s;
+}
+
+.product-icons a:hover,
+.product-icons a.active {
+    background: var(--main-color-one);
+    color: #fff;
+    box-shadow: inset 0 0 8rem -7rem var(--main-color-one);
+}
+
+.wish-icon.active i::before {
+    font-weight: 900;
+    color: #fff;
+}
+
+/* ---------- Product Summary (Title / Rating / Price) ---------- */
+.product-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 0 16px;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
+.product-title {
+    max-width: 95%;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.product-title a {
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.product-title:hover {
+    text-decoration: underline;
+}
+
+.product-card .rating-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0 10px;
+}
+
+.rating-wrap .ratings {
+    position: relative;
+    z-index: 0;
+    width: fit-content;
+    height: 16px;
+    display: inline-block;
+}
+
+.rating-wrap .ratings span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    line-height: 16px;
+}
+
+.rating-wrap .ratings span:after {
+    content: "\f005\f005\f005\f005\f005";
+    width: 100%;
+    font-family: "Line Awesome Free";
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.rating-wrap .ratings span.hide-rating:after {
+    color: #e2e2e2;
+}
+
+.rating-wrap .ratings span.show-rating:after {
+    color: var(--starClr);
+}
+
+.rating-wrap .ratings .show-rating {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.product-card .total-ratings {
+    font-size: 12px;
+    color: #888;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--secondary-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-card .flash-old-prices,
+.product-card .sale {
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: line-through;
+}
+
+/* ---------- Add to Cart Button ---------- */
+.product-card .add-to-cart-btn,
+.product-card .digital-add-to-cart-btn,
+.product-card .booking-btn {
+    width: 100%;
+    color: var(--main-color-one);
+    border: 1px solid;
+    display: flex;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    gap: 6px;
+    text-transform: uppercase;
+    background: transparent;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.product-card .add-to-cart-btn:not(.active):hover,
+.product-card .digital-add-to-cart-btn:not(.active):hover,
+.product-card .booking-btn:hover {
+    background: none;
+    box-shadow: inset 0 0 15rem -12rem var(--main-color-one);
+}
+
+.product-card .add-to-cart-btn.active,
+.product-card .digital-add-to-cart-btn.active {
+    background: var(--main-color-one);
+    color: #fff !important;
+    border: 0;
+}
+
+.add-to-cart-btn .done-txt,
+.digital-add-to-cart-btn .done-txt {
+    font-size: 14px;
+}
+
+/* ---------- Responsive (Mobile) ---------- */
+@media (max-width: 767px) {
+    .product-badge-box {
+        top: 12px;
+        left: 12px;
+    }
+
+    [dir="rtl"] .product-badge-box {
+        right: 12px;
+    }
+
+    .product-icons {
+        top: 12px;
+        right: 12px;
+    }
+
+    [dir="rtl"] .product-icons {
+        left: 12px;
+    }
+
+    .product-icons a {
+        padding: 8px !important;
+        font-size: 16px !important;
+    }
+
+    .product-badge {
+        padding: 4px;
+        font-size: 8px;
+    }
+
+    .product-price {
+        font-size: 14px;
+    }
+
+    .product-card .product-price,
+    .product-card .ratings,
+    .product-card .total-ratings {
+        font-size: 12px !important;
+    }
+
+    .product-card .flash-old-prices,
+    .product-card .sale {
+        font-size: 10px;
+    }
+
+    .product-card .add-to-cart-btn,
+    .product-card .digital-add-to-cart-btn,
+    .product-card .booking-btn {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 565px) {
+    .product-card .add-to-cart-btn,
+    .product-card .digital-add-to-cart-btn,
+    .product-card .booking-btn {
+        padding: 6px;
+        font-size: 10px;
+    }
+
+    .add-to-cart-btn .done-txt,
+    .digital-add-to-cart-btn .done-txt {
+        font-size: 10px;
+    }
+
+    .product-card .add-to-cart-btn i,
+    .product-card .digital-add-to-cart-btn i {
+        font-size: 16px !important;
+    }
+}

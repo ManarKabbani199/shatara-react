@@ -13,19 +13,19 @@ export function WelcomeBanner() {
 
   return (
     <section
-      className="w-full rounded-2xl bg-white border border-brand-brown/10 shadow-lg shadow-brand-brown/10 px-5 py-4 anim-fade-up"
+      className="w-full min-w-0 rounded-xl sm:rounded-2xl bg-white border border-brand-brown/10 shadow-lg shadow-brand-brown/10 px-4 sm:px-5 py-3 sm:py-4 anim-fade-up"
       dir="rtl"
       style={{ '--anim-delay': '0s' } as React.CSSProperties}
     >
-      <div className="flex items-center gap-3">
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-purple/15 text-brand-purple font-bold text-lg shrink-0">
+      <div className="flex items-center gap-3 min-w-0">
+        <span className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-brand-purple/15 text-brand-purple font-bold text-base sm:text-lg shrink-0">
           {displayName.charAt(0)}
         </span>
-        <div className="flex flex-col">
-          <h2 className="text-brand-brown font-bold text-base md:text-lg leading-tight">
+        <div className="flex flex-col min-w-0">
+          <h2 className="text-brand-brown font-bold text-sm sm:text-base md:text-lg leading-tight truncate">
             مرحباً، {displayName}!
           </h2>
-          <p className="text-text-secondary text-sm leading-snug">
+          <p className="text-text-secondary text-xs sm:text-sm leading-snug">
             سعداء بعودتك إلى شطارة.
           </p>
         </div>

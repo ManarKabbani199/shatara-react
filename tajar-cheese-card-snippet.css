@@ -1,0 +1,333 @@
+/* =====================================================
+   Tajar Store — "Cheese Website" Product Card CSS
+   Target: .product-card.global-card.product (Tajar structure)
+   Source design: src/features/landing/components/products-section.tsx
+   Paste this into Tajar CSS editor and click Publish
+   ===================================================== */
+
+:root {
+    --cheese-purple: #AB86B9;
+    --cheese-purple-hover: #9a73a8;
+    --cheese-brown: #6B4E45;
+    --cheese-dark: #1a1a1f;
+    --cheese-card-w: 220px;
+    --cheese-card-h: 290px;
+}
+
+/* =====================================================
+   1. CARD CONTAINER
+   ===================================================== */
+.grid-product-list .product-card.global-card.product,
+.product-card.global-card.product {
+    width: var(--cheese-card-w) !important;
+    max-width: var(--cheese-card-w) !important;
+    height: var(--cheese-card-h) !important;
+    min-height: var(--cheese-card-h) !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    z-index: 1 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 24px !important;
+    padding: 0 !important;
+    border: none !important;
+
+    /* Fallback dark gradient — replace with your uploaded backg.png URL if you want exact image */
+    background: linear-gradient(145deg, #25222b 0%, #1a1820 50%, #0f0e12 100%) !important;
+    /* EXACT BACKGROUND: upload backg.png to Tajar media then replace the line above with:
+       background: url('https://cdn.tjar.sa/.../backg.png') center/cover no-repeat !important;
+    */
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.grid-product-list .product-card.global-card.product:hover,
+.product-card.global-card.product:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32) !important;
+}
+
+/* =====================================================
+   2. IMAGE AREA
+   ===================================================== */
+.grid-product-list .product-card.global-card.product .product-head,
+.grid-product-list .product-card.global-card.product .global-card-thumb {
+    position: relative !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    width: 100% !important;
+    height: 155px !important;
+    max-width: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.grid-product-list .product-card.global-card.product a.product-img {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 10px !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-img img {
+    position: static !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    background: transparent !important;
+    transition: transform 0.5s ease !important;
+}
+
+.grid-product-list .product-card.global-card.product:hover .product-img img {
+    transform: scale(1.08) !important;
+}
+
+/* =====================================================
+   3. BADGE (discount / new) — top right
+   ===================================================== */
+.grid-product-list .product-card.global-card.product .product-badge-box {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+    max-width: none !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    z-index: 10 !important;
+}
+
+[dir="rtl"] .grid-product-list .product-card.global-card.product .product-badge-box {
+    right: 12px !important;
+    left: auto !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-badge {
+    background: #ef4444 !important;
+    color: #fff !important;
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* =====================================================
+   4. WISHLIST ICON — top left small circle
+   ===================================================== */
+.grid-product-list .product-card.global-card.product .product-icons {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    right: auto !important;
+    z-index: 10 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+[dir="rtl"] .grid-product-list .product-card.global-card.product .product-icons {
+    left: 12px !important;
+    right: auto !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-icons a {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    backdrop-filter: blur(4px) !important;
+    transition: all 0.25s ease !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-icons a:hover,
+.grid-product-list .product-card.global-card.product .product-icons a.active {
+    background: var(--cheese-purple) !important;
+    color: #fff !important;
+    border-color: var(--cheese-purple) !important;
+}
+
+/* =====================================================
+   5. SUMMARY — title + price (rating hidden to match cheese site)
+   ===================================================== */
+.grid-product-list .product-card.global-card.product .product-summary {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: stretch !important;
+    padding: 10px 12px 12px !important;
+    gap: 6px !important;
+    text-transform: none !important;
+    background: transparent !important;
+    text-align: right !important;
+}
+
+/* Hide rating stars (cheese cards don't show ratings) */
+.grid-product-list .product-card.global-card.product .rating-wrap {
+    display: none !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-title {
+    max-width: 100% !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.45 !important;
+    color: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: right !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-title a {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+/* Price block wrapper */
+.grid-product-list .product-card.global-card.product .product-summary > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-end !important;
+    gap: 2px !important;
+    margin-top: auto !important;
+    padding-bottom: 42px !important; /* space for absolute cart button */
+}
+
+.grid-product-list .product-card.global-card.product .product-price {
+    display: inline !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    line-height: 1.2 !important;
+}
+
+.grid-product-list .product-card.global-card.product .product-price .sale,
+.grid-product-list .product-card.global-card.product .product-price + .sale,
+.grid-product-list .product-card.global-card.product .flash-old-prices,
+.grid-product-list .product-card.global-card.product .sale {
+    display: inline !important;
+    color: #9ca3af !important;
+    font-size: 9.5px !important;
+    font-weight: 700 !important;
+    text-decoration: line-through !important;
+    margin-right: 6px !important;
+}
+
+/* =====================================================
+   6. ADD TO CART BUTTON — bottom right purple pill
+   ===================================================== */
+.grid-product-list .product-card.global-card.product .add-to-cart-btn,
+.grid-product-list .product-card.global-card.product .digital-add-to-cart-btn,
+.grid-product-list .product-card.global-card.product .booking-btn {
+    position: absolute !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    padding: 7px 11px !important;
+    background: var(--cheese-purple) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+    transition: background 0.25s ease, transform 0.2s ease !important;
+}
+
+[dir="rtl"] .grid-product-list .product-card.global-card.product .add-to-cart-btn,
+[dir="rtl"] .grid-product-list .product-card.global-card.product .digital-add-to-cart-btn,
+[dir="rtl"] .grid-product-list .product-card.global-card.product .booking-btn {
+    right: 12px !important;
+    left: auto !important;
+}
+
+.grid-product-list .product-card.global-card.product .add-to-cart-btn:hover,
+.grid-product-list .product-card.global-card.product .digital-add-to-cart-btn:hover,
+.grid-product-list .product-card.global-card.product .booking-btn:hover {
+    background: var(--cheese-purple-hover) !important;
+    transform: scale(1.04) !important;
+    box-shadow: none !important;
+}
+
+.grid-product-list .product-card.global-card.product .add-to-cart-btn i,
+.grid-product-list .product-card.global-card.product .digital-add-to-cart-btn i {
+    font-size: 13px !important;
+}
+
+/* Disabled / out-of-stock state */
+.grid-product-list .product-card.global-card.product .add-to-cart-btn:disabled,
+.grid-product-list .product-card.global-card.product .add-to-cart-btn[style*="pointer-events: none"] {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* =====================================================
+   7. RESPONSIVE (mobile)
+   ===================================================== */
+@media (max-width: 767px) {
+    .grid-product-list .product-card.global-card.product,
+    .product-card.global-card.product {
+        --cheese-card-w: 170px;
+        --cheese-card-h: 235px;
+    }
+
+    .grid-product-list .product-card.global-card.product .product-head,
+    .grid-product-list .product-card.global-card.product .global-card-thumb {
+        height: 125px !important;
+    }
+
+    .grid-product-list .product-card.global-card.product .product-title {
+        font-size: 11px !important;
+    }
+
+    .grid-product-list .product-card.global-card.product .product-price {
+        font-size: 11px !important;
+    }
+
+    .grid-product-list .product-card.global-card.product .product-price .sale,
+    .grid-product-list .product-card.global-card.product .sale {
+        font-size: 8.5px !important;
+    }
+
+    .grid-product-list .product-card.global-card.product .add-to-cart-btn,
+    .grid-product-list .product-card.global-card.product .digital-add-to-cart-btn,
+    .grid-product-list .product-card.global-card.product .booking-btn {
+        padding: 5px 8px !important;
+        font-size: 9px !important;
+    }
+
+    .grid-product-list .product-card.global-card.product .product-summary > div {
+        padding-bottom: 36px !important;
+    }
+}

@@ -7,10 +7,10 @@ import { WelcomeBanner } from '@/features/home/components/welcome-banner';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#EFF3F7]">
+    <div className="min-h-screen flex flex-col bg-[#EFF3F7] overflow-x-hidden">
       <Navbar />
       <main className="flex-1 flex flex-col">
-        <div className="flex flex-col gap-4 px-4 md:px-6 py-4 max-w-6xl mx-auto w-full">
+        <div className="flex flex-col gap-4 px-3 sm:px-4 md:px-6 py-3 sm:py-4 max-w-6xl mx-auto w-full min-w-0">
           <WelcomeBanner />
           <HeroSection />
           <StoreSection />
