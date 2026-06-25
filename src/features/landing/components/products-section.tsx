@@ -16,11 +16,22 @@ interface Product {
 }
 
 const products: Product[] = [
-  { id: 1, name: 'شطرنج شطارة', originalPrice: 349.99, price: 249.99, discount: 30, image: '/assets/images/piece0.png' },
-  { id: 2, name: 'شطرنج شطارة', originalPrice: 349.99, price: 249.99, discount: 30, image: '/assets/images/piece0.png' },
-  { id: 3, name: 'شطرنج شطارة', originalPrice: 349.99, price: 249.99, discount: 30, image: '/assets/images/piece0.png' },
-  { id: 4, name: 'شطرنج شطارة', originalPrice: 349.99, price: 249.99, discount: 30, image: '/assets/images/piece0.png' },
-  { id: 5, name: 'شطرنج شطارة', originalPrice: 349.99, price: 249.99, discount: 30, image: '/assets/images/piece0.png' },
+  {
+    id: 1,
+    name: 'SHA-26-004-S2 رقعة ميدان شطارة من خشب الماهوجني الطبيعي',
+    originalPrice: 349.99,
+    price: 249.99,
+    discount: 30,
+    image: '/assets/images/product-sha-26-004-s2.png',
+  },
+  {
+    id: 2,
+    name: 'SHA-26-001-S1 حقيبة رقعة ميدان شطارة مطوية',
+    originalPrice: 349.99,
+    price: 249.99,
+    discount: 30,
+    image: '/assets/images/product-sha-26-001-s1.jpg',
+  },
 ];
 
 export function ProductsSection() {
