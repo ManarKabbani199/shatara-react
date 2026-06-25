@@ -13,37 +13,38 @@ interface Product {
   price: number;
   discount: number;
   image: string | null;
+  link: string;
 }
 
 const products: Product[] = [
   {
     id: 1,
-    name: 'SHA-26-004-S2 رقعة ميدان شطارة من خشب الماهوجني الطبيعي',
+    name: 'رقعة ميدان شطارة من خشب الماهوجني الطبيعي',
     originalPrice: 349.99,
     price: 249.99,
     discount: 30,
     image: '/assets/images/product-sha-26-004-s2.png',
+    link: 'https://shatarachess.com/p/3RfSL1',
   },
   {
     id: 2,
-    name: 'SHA-26-001-S1 حقيبة رقعة ميدان شطارة مطوية',
+    name: 'حقيبة رقعة ميدان شطارة مطوية',
     originalPrice: 349.99,
     price: 249.99,
     discount: 30,
     image: '/assets/images/product-sha-26-001-s1.jpg',
+    link: 'https://shatarachess.com/p/sha-26-001-s1-hkyb-rkaa-mydan-shtar-mtoy-CfZtP',
   },
 ];
 
 export function ProductsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
-    // In RTL, scrollLeft can be negative in some browsers
     const scrollLeft = Math.abs(el.scrollLeft);
     const maxScroll = el.scrollWidth - el.clientWidth;
     setCanScrollPrev(scrollLeft > 8);
@@ -89,7 +90,9 @@ export function ProductsSection() {
             </h2>
 
             <Link
-              href="/store"
+              href={URLS.store}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 mt-4 text-base font-bold text-[#AB86B9] border-b border-[#AB86B9] pb-0.5 hover:text-[#6B4E45] hover:border-[#6B4E45] transition-all"
             >
               <span>إلى المتجر</span>
@@ -105,17 +108,15 @@ export function ProductsSection() {
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {products.map((product) => (
-                <div
+                <a
                   key={product.id}
+                  href={product.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   data-card
                   className="flex-shrink-0 w-[200px] sm:w-[220px] snap-start"
-                  onMouseEnter={() => setHoveredId(product.id)}
-                  onMouseLeave={() => setHoveredId(null)}
                 >
-                  <div
-                    className="relative rounded-[18px] overflow-hidden bg-cover bg-center cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-[270px] sm:h-[290px]"
-                    style={{ backgroundImage: "url('/assets/images/backg.png')" }}
-                  >
+                  <div className="relative rounded-[18px] overflow-hidden bg-white border border-[#E8E4DE] cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-[270px] sm:h-[290px]">
 
                     {product.discount > 0 && (
                       <div className="absolute top-3 right-3 z-10 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md">
@@ -123,7 +124,7 @@ export function ProductsSection() {
                       </div>
                     )}
 
-                    <div className="relative w-full aspect-square bg-transparent overflow-hidden p-2 flex-shrink-0">
+                    <div className="relative w-full aspect-square overflow-hidden p-2 flex-shrink-0">
                       {product.image ? (
                         <Image
                           src={product.image}
@@ -142,27 +143,20 @@ export function ProductsSection() {
                     </div>
 
                     <div className="px-3 pb-3 pt-0.5 flex flex-col flex-1 justify-between text-right">
-                      <h3 className="text-white font-bold text-xs leading-snug">
+                      <h3 className="text-[#6B4E45] font-bold text-xs leading-snug line-clamp-2">
                         {product.name}
                       </h3>
                       <div className="flex items-center justify-between gap-1 flex-row-reverse mt-1">
-                        {/* Add to Cart button (Right in RTL flex-row-reverse, or physically on the right side) */}
-                        <a
-                          href={URLS.store}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-[#AB86B9] hover:bg-[#9a73a8] text-white text-[9.5px] font-bold rounded-lg transition-all shadow-sm shrink-0"
-                        >
+                        <span className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-[#AB86B9] text-white text-[9.5px] font-bold rounded-lg shadow-sm shrink-0">
                           <HiShoppingCart className="w-3 h-3" />
                           <span>أضف للسلة</span>
-                        </a>
+                        </span>
 
-                        {/* Pricing (Left in RTL flex-row-reverse, or physically on the left side) */}
                         <div className="flex flex-col text-right justify-center">
                           <span className="text-gray-400 text-[8.5px] font-bold line-through leading-tight">
                             {product.originalPrice.toFixed(2)} ر.س
                           </span>
-                          <span className="text-white text-[12px] font-extrabold leading-none mt-0.5">
+                          <span className="text-[#6B4E45] text-[12px] font-extrabold leading-none mt-0.5">
                             {product.price.toFixed(2)} ر.س
                           </span>
                         </div>
@@ -170,7 +164,7 @@ export function ProductsSection() {
                     </div>
 
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
@@ -179,7 +173,6 @@ export function ProductsSection() {
 
         {/* ── Navigation arrows — centered below ── */}
         <div className="flex items-center justify-center gap-3 mt-8">
-          {/* Prev (right arrow) — active when we can scroll back */}
           <button
             onClick={() => scroll('prev')}
             aria-label="السابق"
@@ -191,7 +184,6 @@ export function ProductsSection() {
           >
             <HiChevronRight className="w-5 h-5" />
           </button>
-          {/* Next (left arrow) — active when we can scroll forward */}
           <button
             onClick={() => scroll('next')}
             aria-label="التالي"

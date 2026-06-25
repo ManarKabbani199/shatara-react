@@ -12,7 +12,7 @@ export const COLORS = {
 } as const;
 
 export const URLS = {
-  store: 'https://shatarashatara.com/',
+  store: 'https://shatarachess.com/shop',
   guide: '/shatraBooks.pdf',
   club: 'https://hawi.gov.sa/club/club-details/hxsdFo0dsfyUZLqg2bY0ljSyu3yBXW3UvxMl3Jk3P466Por21Ldno4TUsJotNQHdQsw9PqBv40E',
 } as const;
