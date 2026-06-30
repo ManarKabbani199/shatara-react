@@ -1,6 +1,7 @@
 import { LandingNavbar } from '@/features/landing/components/landing-navbar';
 import { LandingHero } from '@/features/landing/components/landing-hero';
 import { StatsSection } from '@/features/landing/components/stats-section';
+import { RankingSection } from '@/features/landing/components/ranking-section';
 import { ShataraPreview } from '@/features/landing/components/shatara-preview';
 import { ProductsSection } from '@/features/landing/components/products-section';
 import { GuideSection } from '@/features/landing/components/guide-section';
@@ -17,6 +18,7 @@ export default function LandingPage() {
       <div className="flex-1 relative">
         <LandingHero />
         <StatsSection />
+        <RankingSection />
         <ShataraPreview />
         <ProductsSection />
         <GuideSection />

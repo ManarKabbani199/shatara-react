@@ -49,6 +49,9 @@ backg-q90.jpg
 # duplicate/backup project folder
 /shatara-develop/
 
+# Chess_Kings Flutter game project (separate/untracked)
+/Chess_Kings/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -3,34 +3,40 @@
 import type React from 'react';
 import Image from 'next/image';
 import { HiOutlineUser, HiOutlineGlobeAlt, HiUserGroup } from 'react-icons/hi';
+import { useChessStats } from '@/features/chess-api/hooks/use-chess-stats';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface StatItem {
   label: string;
-  value: string;
+  value: number;
   icon: React.ComponentType<{ className?: string }>;
   isOnline?: boolean;
 }
 
-const stats: StatItem[] = [
-  {
-    label: 'متواجد حاليا',
-    value: '12',
-    icon: HiOutlineUser,
-    isOnline: true,
-  },
-  {
-    label: 'زائر',
-    value: '128',
-    icon: HiUserGroup,
-  },
-  {
-    label: 'بلدا',
-    value: '20',
-    icon: HiOutlineGlobeAlt,
-  },
-];
-
 export function StatsSection() {
+  const { data, isLoading } = useChessStats();
+
+  const stats: StatItem[] = [
+    {
+      label: 'متواجد حاليا',
+      value: data.online,
+      icon: HiOutlineUser,
+      isOnline: true,
+    },
+    {
+      label: 'زائر',
+      value: data.visitors,
+      icon: HiUserGroup,
+    },
+    {
+      label: 'بلدا',
+      value: data.countries,
+      icon: HiOutlineGlobeAlt,
+    },
+  ];
+
+  const showSkeleton = (value: number) => isLoading && value === 0;
+
   return (
     <section className="py-[70px] relative overflow-hidden bg-white" dir="rtl">
       {/* World Map Background */}
@@ -59,6 +65,7 @@ export function StatsSection() {
           <div className="flex-1 flex flex-wrap items-center justify-center md:justify-end gap-8 sm:gap-12 md:gap-16 lg:gap-20 w-full">
             {stats.map((stat) => {
               const Icon = stat.icon;
+              const loading = showSkeleton(stat.value);
               return (
                 <div key={stat.label} className="flex items-center gap-3">
                   {/* Icon Container (Right in RTL) */}
@@ -70,10 +77,14 @@ export function StatsSection() {
                   </div>
 
                   {/* Text Container (Left in RTL) */}
-                  <div className="flex flex-col text-right">
-                    <span className="text-3xl md:text-[38px] font-bold text-[#644B48] leading-none">
-                      {stat.value}
-                    </span>
+                  <div className="flex flex-col text-right min-w-[80px]">
+                    {loading ? (
+                      <Skeleton className="h-8 md:h-10 w-16 mb-2" />
+                    ) : (
+                      <span className="text-3xl md:text-[38px] font-bold text-[#644B48] leading-none">
+                        {stat.value.toLocaleString('ar-SA')}
+                      </span>
+                    )}
                     <span className="text-sm font-bold text-gray-500 mt-2">
                       {stat.label}
                     </span>
