@@ -1,6 +1,7 @@
 export const API_BASE = {
   origin: 'https://shatara.sa',
   chess: 'https://shatara.sa/chess_api',
+  shataraGame: 'https://shatara.sa/ShataraGame',
 } as const;
 
 export const CHESS_API_ENDPOINTS = {
@@ -8,6 +9,8 @@ export const CHESS_API_ENDPOINTS = {
   online: `${API_BASE.chess}/online_users.php`,
   countries: `${API_BASE.chess}/count_countries.php`,
   ranking: `${API_BASE.chess}/get_ranking.php`,
+  logout: `${API_BASE.chess}/logout.php`,
+  uploads: `${API_BASE.shataraGame}/list_uploads.php`,
 } as const;
 
 export const PROXY_PATHS = {
@@ -15,4 +18,5 @@ export const PROXY_PATHS = {
   online: '/api/chess/online',
   countries: '/api/chess/countries',
   ranking: '/api/chess/ranking',
+  uploads: '/api/chess/uploads',
 } as const;

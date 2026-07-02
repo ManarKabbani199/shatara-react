@@ -4,6 +4,7 @@ import { HeroSection } from '@/features/home/components/hero-section';
 import { StoreSection } from '@/features/home/components/store-section';
 import { JoinGuideSectionWrapper } from '@/features/home/components/join-guide-section-wrapper';
 import { WelcomeBanner } from '@/features/home/components/welcome-banner';
+import { UploadsGallery } from '@/features/home/components/uploads-gallery';
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 px-3 sm:px-4 md:px-6 py-3 sm:py-4 max-w-6xl mx-auto w-full min-w-0">
           <WelcomeBanner />
           <HeroSection />
+          <UploadsGallery limit={5} />
           <StoreSection />
           <JoinGuideSectionWrapper />
         </div>
