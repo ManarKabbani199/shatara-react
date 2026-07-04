@@ -14,7 +14,7 @@ export function WelcomeBanner() {
   return (
     <section
       className="w-full min-w-0 rounded-xl sm:rounded-2xl bg-white border border-brand-brown/10 shadow-lg shadow-brand-brown/10 px-4 sm:px-5 py-3 sm:py-4 anim-fade-up"
-      dir="rtl"
+      dir="ltr"
       style={{ '--anim-delay': '0s' } as React.CSSProperties}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -23,10 +23,10 @@ export function WelcomeBanner() {
         </span>
         <div className="flex flex-col min-w-0">
           <h2 className="text-brand-brown font-bold text-sm sm:text-base md:text-lg leading-tight truncate">
-            مرحباً، {displayName}!
+            Welcome, {displayName}
           </h2>
           <p className="text-text-secondary text-xs sm:text-sm leading-snug">
-            سعداء بعودتك إلى شطارة.
+            we happy you back in chatara
           </p>
         </div>
       </div>

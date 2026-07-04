@@ -1,34 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { HiGlobeAlt, HiChevronDown } from 'react-icons/hi';
-
-interface Player {
-  id: number;
-  name: string;
-  handle: string;
-  rank: string;
-  color: string;
-}
-
-const leaderboard: Player[] = [
-  { id: 1, name: 'Nour', handle: '@nour_off', rank: '#1', color: 'bg-[#AB86B9]' },
-  { id: 2, name: 'Nour', handle: '@nour_off', rank: '#2', color: 'bg-[#E57373]' },
-  { id: 3, name: 'Nour', handle: '@nour_off', rank: '#3', color: 'bg-[#8D6E63]' },
-  { id: 4, name: 'Nour', handle: '@nour_off', rank: '#4', color: 'bg-[#F2F2F2]' },
-  { id: 5, name: 'Nour', handle: '@nour_off', rank: '#5', color: 'bg-[#F2F2F2]' },
-  { id: 6, name: 'Nour', handle: '@nour_off', rank: '#6', color: 'bg-[#F2F2F2]' },
-];
+import { HiChevronDown } from 'react-icons/hi';
 
 export function ShataraPreview() {
   return (
     <section className="py-[70px] bg-white" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-[25px] items-start">
+        <div className="grid grid-cols-1 gap-[25px]">
 
-          {/* Right Column: Shatara Board Preview */}
-          <div className="lg:col-span-8 bg-[#AB86B9] rounded-[24px] p-4 sm:p-6 shadow-xl">
+          {/* Shatara Board Preview */}
+          <div className="bg-[#AB86B9] rounded-[24px] p-4 sm:p-6 shadow-xl">
             <div className="bg-white rounded-[16px] overflow-hidden flex flex-col lg:flex-row">
 
               {/* Shatara Board Side */}
@@ -106,55 +88,6 @@ export function ShataraPreview() {
                 <span>تحدي أصدقائك</span>
               </button>
             </div>
-          </div>
-
-          {/* Left Column: Leaderboard */}
-          <div className="lg:col-span-4 bg-[#F8F9FA] rounded-[24px] p-6">
-            <div className="flex items-center justify-between mb-8">
-              {/* Filter: بليتز (Right in RTL) */}
-              <button className="px-3 py-1.5 rounded-lg text-sm font-bold bg-white text-gray-700 border border-gray-100 flex items-center gap-2 shadow-sm">
-                <span>بليتز</span>
-                <HiChevronDown className="w-4 h-4 text-gray-400" />
-              </button>
-              {/* Filter: عالمي (Left in RTL) */}
-              <button className="px-4 py-1.5 rounded-lg text-sm font-bold bg-white text-gray-700 border border-gray-100 flex items-center gap-2 shadow-sm">
-                <span>عالمي</span>
-                <HiGlobeAlt className="w-4 h-4 text-gray-400" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {leaderboard.map((player) => (
-                <div key={player.id} className="bg-white p-3 rounded-xl flex items-center justify-between border border-gray-100 shadow-sm">
-                  {/* Right Group (Rank and Name in RTL) */}
-                  <div className="flex items-center gap-3">
-                    <div className={`${player.color} ${player.id > 3 ? 'text-gray-400' : 'text-white'} text-[11px] font-bold px-2.5 py-1 rounded-md min-w-[36px] text-center`}>
-                      {player.rank}
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-gray-800 text-sm leading-tight">{player.name}</div>
-                      <div className="text-[10px] text-gray-400 font-bold">{player.handle}</div>
-                    </div>
-                  </div>
-
-                  {/* Left Group (Icons in RTL) */}
-                  <div className="flex items-center gap-2">
-                    {/* Saudi Flag Icon (Closer to name) */}
-                    <div className="w-8 h-8 rounded bg-[#06AC2A] flex items-center justify-center overflow-hidden">
-                      <Image src="/assets/images/Country flags.png" alt="KSA" width={24} height={16} className="object-contain" />
-                    </div>
-                    {/* Avatar Icon (Outer left) */}
-                    <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100">
-                      <Image src="/assets/images/trophy-dynamic-color.png" alt="" width={18} height={18} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className="w-full mt-6 py-3 rounded-xl bg-gray-200 text-gray-400 font-bold text-xs hover:bg-gray-300 transition-colors">
-              عرض الكل
-            </button>
           </div>
 
         </div>

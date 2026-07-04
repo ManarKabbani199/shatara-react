@@ -11,6 +11,7 @@ export const CHESS_API_ENDPOINTS = {
   ranking: `${API_BASE.chess}/get_ranking.php`,
   logout: `${API_BASE.chess}/logout.php`,
   uploads: `${API_BASE.shataraGame}/list_uploads.php`,
+  register: `${API_BASE.chess}/register.php`,
 } as const;
 
 export const PROXY_PATHS = {
@@ -19,4 +20,5 @@ export const PROXY_PATHS = {
   countries: '/api/chess/countries',
   ranking: '/api/chess/ranking',
   uploads: '/api/chess/uploads',
+  register: '/api/auth/register',
 } as const;
