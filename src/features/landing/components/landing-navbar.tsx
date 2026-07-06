@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useCallback, useEffect } from 'react';
 import { SITE, URLS } from '@/config/constants';
-import { MdClose, MdLogin, MdLogout } from 'react-icons/md';
+import { MdClose, MdLogin, MdLogout, MdStorefront, MdMenuBook } from 'react-icons/md';
+import { FaUsers } from 'react-icons/fa6';
 import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export function LandingNavbar() {
@@ -54,7 +55,7 @@ export function LandingNavbar() {
                 href="https://shatara.sa/play/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base font-bold transition-colors hover:opacity-75"
+                className="flex items-center gap-1.5 text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
                 إلعب الآن
@@ -63,27 +64,30 @@ export function LandingNavbar() {
                 href={URLS.store}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base font-bold transition-colors hover:opacity-75"
+                className="flex items-center gap-1.5 text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
+                <MdStorefront className="w-5 h-5" />
                 متجر شطارة
               </a>
               <a
                 href={URLS.club}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base font-bold transition-colors hover:opacity-75"
+                className="flex items-center gap-1.5 text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
+                <FaUsers className="w-5 h-5" />
                 نادي شطارة
               </a>
               <a
                 href={URLS.guide}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base font-bold transition-colors hover:opacity-75"
+                className="flex items-center gap-1.5 text-base font-bold transition-colors hover:opacity-75"
                 style={{ color: '#6B4E45' }}
               >
+                <MdMenuBook className="w-5 h-5" />
                 دليل شطارة
               </a>
             </div>

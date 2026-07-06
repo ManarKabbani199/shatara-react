@@ -38,7 +38,7 @@ export function Navbar() {
         <nav className="max-w-6xl mx-auto px-4 py-3" dir="rtl">
           {/* Desktop */}
           <div className="hidden lg:flex items-center gap-4">
-            <Link href="/home" className="shrink-0 group">
+            <Link href="/" className="shrink-0 group">
               <img
                 src="/assets/images/logon.png"
                 alt="شعار شطارة"
@@ -76,7 +76,7 @@ export function Navbar() {
 
           {/* Mobile */}
           <div className="flex lg:hidden items-center justify-between">
-            <Link href="/home">
+            <Link href="/">
               <img
                 src="/assets/images/logon.png"
                 alt="شعار شطارة"

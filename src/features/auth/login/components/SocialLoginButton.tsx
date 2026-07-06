@@ -29,7 +29,7 @@ export default function SocialLoginButton() {
             localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
             alert(data.message || "تم تسجيل الدخول بواسطة Google");
-            window.location.href = "/home";
+            window.location.href = "/";
           } else {
             alert(data.message || "فشل تسجيل الدخول بواسطة Google");
           }

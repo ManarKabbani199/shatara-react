@@ -53,7 +53,7 @@ export default function RegisterForm() {
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
                 alert("تم إنشاء الحساب بنجاح");
-                window.location.href = "/home";
+                window.location.href = "/";
             } else {
                 alert(data.message || "فشل إنشاء الحساب");
             }

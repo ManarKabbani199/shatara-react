@@ -8,12 +8,17 @@ import { GuideSection } from '@/features/landing/components/guide-section';
 import { LandingFooter } from '@/features/landing/components/landing-footer';
 import { VisitorTracker } from '@/features/visitor/components/visitor-tracker';
 import { VideoPopup } from '@/features/landing/components/video-popup';
+import { WelcomeBanner } from '@/features/home/components/welcome-banner';
 
 export default function LandingPage() {
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-white">
       <LandingNavbar />
       <VisitorTracker />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 w-full">
+        <WelcomeBanner />
+      </div>
 
       <div className="flex-1 relative">
         <LandingHero />
