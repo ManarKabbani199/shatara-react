@@ -47,12 +47,12 @@ export function GuideCard() {
             </h3>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <a
               href={URLS.store}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl bg-[#AB86B9] text-white font-bold text-xs shadow-sm hover:bg-[#AB86B9]/90 transition-all flex items-center justify-center gap-1"
+              className="w-full sm:w-auto px-3 py-1.5 rounded-xl bg-[#AB86B9] text-white font-bold text-xs shadow-sm hover:bg-[#AB86B9]/90 transition-all flex items-center justify-center gap-1 whitespace-nowrap"
             >
               متجر شطارة
             </a>
@@ -61,7 +61,7 @@ export function GuideCard() {
               variant="green"
               size="sm"
               onClick={handleDownload}
-              className="flex-1 sm:flex-initial rounded-xl px-3 py-1.5 text-xs pulse-glow"
+              className="w-full sm:w-auto rounded-xl px-3 py-1.5 text-xs pulse-glow whitespace-nowrap"
             >
               <MdDownload className="w-4 h-4 ms-1" />
               تحميل

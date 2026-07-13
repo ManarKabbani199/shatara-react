@@ -15,10 +15,12 @@ export const CHESS_API_ENDPOINTS = {
 } as const;
 
 export const PROXY_PATHS = {
-  visitors: '/api/chess/visitors',
-  online: '/api/chess/online',
-  countries: '/api/chess/countries',
-  ranking: '/api/chess/ranking',
-  uploads: '/api/chess/uploads',
-  register: '/api/auth/register',
+  // Trailing slashes required: next.config.ts has trailingSlash: true,
+  // otherwise every request gets a 308 redirect first
+  visitors: '/api/chess/visitors/',
+  online: '/api/chess/online/',
+  countries: '/api/chess/countries/',
+  ranking: '/api/chess/ranking/',
+  uploads: '/api/chess/uploads/',
+  register: '/api/auth/register/',
 } as const;

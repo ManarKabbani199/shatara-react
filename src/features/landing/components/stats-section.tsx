@@ -38,7 +38,7 @@ export function StatsSection() {
   const showSkeleton = (value: number) => isLoading && value === 0;
 
   return (
-    <section className="py-[70px] relative overflow-hidden bg-white" dir="rtl">
+    <section className="py-12 sm:py-16 md:py-[70px] relative overflow-hidden bg-white" dir="rtl">
       {/* World Map Background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div className="relative w-full h-[600px] max-w-7xl opacity-90">

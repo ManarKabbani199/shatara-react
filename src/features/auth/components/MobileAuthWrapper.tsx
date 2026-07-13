@@ -94,7 +94,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("login")}
-                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "login"
+                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap ${activeTab === "login"
                                         ? "bg-[#A67BC4] text-white shadow-sm"
                                         : "text-[#8C7467] hover:text-[#5C4033]"
                                     }`}
@@ -105,7 +105,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("register")}
-                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "register"
+                                className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap ${activeTab === "register"
                                         ? "bg-[#A67BC4] text-white shadow-sm"
                                         : "text-[#8C7467] hover:text-[#5C4033]"
                                     }`}

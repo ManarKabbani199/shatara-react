@@ -44,7 +44,7 @@ export function StoreSection() {
         </a>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 anim-stagger">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 anim-stagger">
         {STORE_IMAGES.map((img, idx) => (
           <div
             key={idx}

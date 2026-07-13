@@ -146,10 +146,10 @@ export function LandingNavbar() {
             onClick={closeMobile}
           />
           <div
-            className="fixed inset-y-0 end-0 w-64 bg-white shadow-2xl z-50"
+            className="fixed inset-y-0 start-0 w-72 max-w-[85vw] bg-white shadow-2xl z-50 flex flex-col"
             dir="rtl"
           >
-            <div className="flex items-center justify-between p-3 border-b border-brand-brown/10">
+            <div className="flex items-center justify-between p-4 border-b border-brand-brown/10 shrink-0">
               <Image
                 src="/assets/images/logoapp.png"
                 alt={SITE.name}
@@ -159,14 +159,14 @@ export function LandingNavbar() {
               />
               <button
                 onClick={closeMobile}
-                className="p-1.5 text-brand-brown rounded-lg hover:bg-brand-brown/10 transition-colors"
+                className="p-2 text-brand-brown rounded-lg hover:bg-brand-brown/10 transition-colors"
                 aria-label="إغلاق القائمة"
               >
-                <MdClose className="w-5 h-5" />
+                <MdClose className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="flex flex-col p-3 gap-0.5">
+            <div className="flex flex-col p-4 gap-1 overflow-y-auto">
               <a
                 href="https://shatara.sa/play/"
                 target="_blank"

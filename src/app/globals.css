@@ -429,8 +429,20 @@ img {
 
 /* ── Responsive: very small screens ── */
 @media (max-width: 480px) {
+  .video-popup-overlay {
+    padding: 0.75rem;
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
   .video-popup-card {
     border-radius: 0.875rem;
+    max-width: 100%;
+  }
+  .video-popup-close {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
   }
   .video-popup-footer {
     padding: 0.65rem 1rem;
@@ -450,4 +462,4 @@ img {
     opacity: 1 !important;
     transform: none !important;
   }
-}
+}

@@ -58,7 +58,7 @@ export function ShataraPreview() {
                   <span className="bg-white/20 px-2 py-0.5 rounded">1:43</span>
                 </div>
 
-                <div className="relative aspect-square lg:aspect-auto lg:flex-1 bg-[#E8DCC4] p-3">
+                <div className="relative aspect-[4/3] sm:aspect-square lg:aspect-auto lg:flex-1 bg-[#E8DCC4] p-3">
                   <div className="relative w-full h-full">
                     <img
                       src={imageSrc}
@@ -120,21 +120,21 @@ export function ShataraPreview() {
             </div>
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-<button
-  onClick={() => (window.location.href = 'https://shatara.sa/play/')}
-  className="cursor-pointer bg-white text-gray-500 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm hover:bg-gray-50 shadow-sm flex items-center justify-center gap-3 transition-colors"
->
-  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-[#AB86B9] bg-[#AB86B9]" />
-  <span>تحدي أصدقائك</span>
-</button>
+              <button
+                onClick={() => (window.location.href = 'https://shatara.sa/play/')}
+                className="cursor-pointer bg-white text-gray-500 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm hover:bg-gray-50 shadow-sm flex items-center justify-center gap-3 transition-colors"
+              >
+                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-[#AB86B9] bg-[#AB86B9]" />
+                <span>تحدي أصدقائك</span>
+              </button>
 
-<button
-  onClick={() => (window.location.href = 'https://shatara.sa/play/')}
-  className="cursor-pointer bg-white text-gray-500 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm hover:bg-gray-50 shadow-sm flex items-center justify-center gap-3 transition-colors"
->
-  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-[#AB86B9] bg-[#AB86B9]" />
-  <span>تحدي أصدقائك</span>
-</button>
+              <button
+                onClick={() => (window.location.href = 'https://shatara.sa/play/')}
+                className="cursor-pointer bg-white text-gray-500 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm hover:bg-gray-50 shadow-sm flex items-center justify-center gap-3 transition-colors"
+              >
+                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-[#AB86B9] bg-[#AB86B9]" />
+                <span>العب الآن</span>
+              </button>
             </div>
 
           </div>

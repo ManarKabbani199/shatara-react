@@ -32,14 +32,8 @@ export default function ForgotPasswordWrapper() {
 
                     {/* Form side */}
                     <div
-                        className="w-full lg:w-[480px] shrink-0 flex flex-col justify-center py-6 lg:py-14 px-6 lg:px-12 rounded-3xl shadow-2xl"
+                        className="w-full lg:w-[480px] shrink-0 flex flex-col justify-center py-6 lg:py-14 px-4 sm:px-6 lg:px-12 lg:rounded-3xl lg:shadow-2xl lg:bg-[url('/assets/images/backhome.png')] lg:bg-cover lg:bg-center lg:bg-no-repeat"
                         dir="rtl"
-                        style={{
-                            backgroundImage: "url('/assets/images/backhome.png')",
-                            backgroundSize: "100% 100%",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                        }}
                     >
                         <div className="w-full flex flex-col items-center mb-6 lg:mb-10 select-none">
                             <Image src="/assets/images/logoapp.png" alt="شطارة" width={220} height={80} priority className="object-contain" />

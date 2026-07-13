@@ -91,7 +91,7 @@ export function JoinGuideSection() {
   ];
 
   return (
-    <section className="w-full min-w-0 bg-surface-light py-4 sm:py-6 px-3 sm:px-4 md:px-6" dir="rtl">
+    <section className="w-full min-w-0 bg-surface-light py-4 sm:py-6" dir="rtl">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-3 sm:gap-4">
         <div
           className="flex-[7] anim-fade-up"

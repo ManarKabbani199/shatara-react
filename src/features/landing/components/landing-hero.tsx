@@ -17,7 +17,7 @@ export function LandingHero() {
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl md:text-[52px] font-bold text-[#644B48] leading-[1.2] max-w-5xl mx-auto tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-[52px] font-bold text-[#644B48] leading-[1.2] max-w-5xl mx-auto tracking-tight">
             المعركة بدأت، وجيشك بانتظار أوامرك
           </h1>
 
@@ -36,7 +36,7 @@ export function LandingHero() {
               href="https://shatara.sa/play/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-8 py-3 bg-[#AB86B9] text-white text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all rounded-xl"
+              className="flex items-center gap-3 px-6 sm:px-8 py-2.5 sm:py-3 bg-[#AB86B9] text-white text-base sm:text-lg font-bold shadow hover:bg-[#AB86B9]/90 transition-all rounded-xl"
             >
               <Image
                 src="/assets/images/Group.png"

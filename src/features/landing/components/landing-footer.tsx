@@ -81,30 +81,30 @@ export function LandingFooter() {
           </div>
 
           {/* Left Column: Newsletter & Socials (Inside Gray Box) */}
-          <div className="bg-[#F8F9FA] rounded-[24px] p-8">
+          <div className="bg-[#F8F9FA] rounded-[24px] p-5 sm:p-8">
             <h3 className="text-[15px] font-bold text-[#4A4A4A] mb-4 text-right">ابق مطلع على جديد شطارة</h3>
-            <form className="flex gap-[10px] mb-10" dir="rtl">
+            <form className="flex flex-col sm:flex-row gap-[10px] mb-10" dir="rtl">
               <input
                 type="email"
                 placeholder="البريد الإلكتروني"
-                className="w-full md:w-[302px] px-4 py-3 rounded-lg bg-white border border-gray-200 text-[11px] focus:outline-none focus:border-[#AB86B9] transition-all text-right placeholder:text-gray-300"
+                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 text-sm focus:outline-none focus:border-[#AB86B9] transition-all text-right placeholder:text-gray-300"
               />
-              <button className="whitespace-nowrap px-4 py-3 rounded-lg bg-[#AB86B9] text-white font-bold text-[11px] hover:bg-[#AB86B9]/90 transition-all shadow-sm">
+              <button className="whitespace-nowrap px-4 py-3 rounded-lg bg-[#AB86B9] text-white font-bold text-sm hover:bg-[#AB86B9]/90 transition-all shadow-sm w-full sm:w-auto">
                 إشترك الآن
               </button>
             </form>
             
             <div className="space-y-3 text-right">
               <h4 className="text-[13px] font-bold text-[#4A4A4A]">حسابات شطارة</h4>
-              <div className="flex items-center justify-start gap-1.5">
+              <div className="flex items-center justify-start gap-2">
                 {footerLinks.socials.map((social, idx) => (
                   <Link
                     key={idx}
                     href={social.href}
                     aria-label={social.label}
-                    className="w-8 h-8 rounded bg-[#AB86B9] text-white flex items-center justify-center hover:bg-[#AB86B9]/90 transition-all"
+                    className="w-10 h-10 rounded bg-[#AB86B9] text-white flex items-center justify-center hover:bg-[#AB86B9]/90 transition-all"
                   >
-                    <social.icon className="w-4 h-4" />
+                    <social.icon className="w-5 h-5" />
                   </Link>
                 ))}
               </div>

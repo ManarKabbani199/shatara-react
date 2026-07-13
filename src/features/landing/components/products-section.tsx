@@ -77,16 +77,19 @@ export function ProductsSection() {
 
           {/* ── Heading column (right in RTL) ── */}
           <div className="lg:w-[260px] xl:w-[300px] flex-shrink-0 text-right lg:pt-4">
-            <h2 className="text-[2.2rem] font-normal leading-[1.4] text-[#6B4E45]">
-              إكتشف
-              <div className="flex items-center justify-start gap-2 text-[#AB86B9] my-1">
-                <img
+            <h2 className="text-[1.6rem] sm:text-4xl lg:text-[2.2rem] font-normal leading-[1.4] text-[#6B4E45]">
+              <span className="inline-flex items-center gap-2 flex-wrap">
+                <span>إكتشف</span>
+                <Image
                   src="/assets/images/Frame 1000008188.png"
-                  alt="لوجو"
+                  alt=""
+                  width={48}
+                  height={48}
                   className="h-[1.1em] w-auto object-contain inline-block"
+                  unoptimized
                 />
-              </div>
-              المميزة
+                <span>المميزة</span>
+              </span>
             </h2>
 
             <Link
@@ -104,7 +107,7 @@ export function ProductsSection() {
           <div className="flex-1 min-w-0 overflow-hidden">
             <div
               ref={scrollRef}
-              className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2"
+              className="grid grid-cols-2 gap-3 lg:flex lg:gap-5 lg:overflow-x-auto lg:snap-x lg:snap-mandatory pb-2"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {products.map((product) => (
@@ -114,9 +117,9 @@ export function ProductsSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-card
-                  className="flex-shrink-0 w-[200px] sm:w-[220px] snap-start"
+                  className="group lg:flex-shrink-0 lg:w-[220px] lg:snap-start"
                 >
-                  <div className="relative rounded-[18px] overflow-hidden bg-white border border-[#E8E4DE] cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-[270px] sm:h-[290px]">
+                  <div className="relative rounded-[18px] overflow-hidden bg-white border border-[#E8E4DE] cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-[265px] sm:h-[290px]">
 
                     {product.discount > 0 && (
                       <div className="absolute top-3 right-3 z-10 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md">
@@ -130,7 +133,7 @@ export function ProductsSection() {
                           src={product.image}
                           alt={product.name}
                           fill
-                          className="object-contain transition-transform duration-500 scale-110"
+                          className="object-contain transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-end justify-center pb-8">
@@ -172,7 +175,7 @@ export function ProductsSection() {
         </div>
 
         {/* ── Navigation arrows — centered below ── */}
-        <div className="flex items-center justify-center gap-3 mt-8">
+        <div className="hidden lg:flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => scroll('prev')}
             aria-label="السابق"

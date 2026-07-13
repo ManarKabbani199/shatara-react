@@ -34,7 +34,7 @@ export function GuideSection() {
             <iframe
               src={URLS.guide}
               title="دليل شطارة الكامل"
-              className="w-full h-[70vh] sm:h-[75vh] min-h-[500px]"
+              className="w-full h-[50vh] sm:h-[60vh] md:h-[75vh] min-h-[300px] sm:min-h-[400px]"
               loading="lazy"
             />
             <p className="text-center text-xs sm:text-sm text-[#6B7280] py-3 px-4 bg-white">

@@ -57,3 +57,6 @@ backg-q90.jpg
 next-env.d.ts
 
 .vercel
+
+# Local screenshot testing artifacts
+screenshots/
