@@ -26,6 +26,30 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                 dir="ltr"
             >
 
+                {/* ── BACK TO HOME ── */}
+                <Link
+                    href="/"
+                    className="absolute top-4 right-4 lg:top-[32px] lg:right-[48px] z-20 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-200 hover:opacity-80 hover:shadow-md bg-white/70 backdrop-blur"
+                    style={{ color: "#6B4E45" }}
+                    dir="rtl"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                    العودة للرئيسية
+                </Link>
+
                 {/* ── MAIN LAYOUT ── */}
                 <div
                     className="relative z-10 flex flex-row items-center justify-center gap-16 lg:gap-24 w-full max-w-[1344px] mx-auto flex-1"
