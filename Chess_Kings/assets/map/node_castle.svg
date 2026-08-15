@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="castleOuterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(171,134,185,0.45)"/>
+      <stop offset="100%" stop-color="rgba(171,134,185,0)"/>
+    </radialGradient>
+    <linearGradient id="castleBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1E2E"/>
+      <stop offset="100%" stop-color="#13131F"/>
+    </linearGradient>
+    <linearGradient id="castleGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F0D878"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer glow -->
+  <circle cx="50" cy="50" r="46" fill="url(#castleOuterGlow)"/>
+  
+  <!-- Main ring -->
+  <circle cx="50" cy="50" r="38" fill="url(#castleBody)" stroke="#AB86B9" stroke-width="3"/>
+  <circle cx="50" cy="50" r="32" fill="none" stroke="#AB86B9" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Castle icon -->
+  <g transform="translate(50, 50)" fill="none" stroke="url(#castleGold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left tower -->
+    <rect x="-20" y="-8" width="12" height="22" rx="1"/>
+    <path d="M-21,-8 L-14,-18 L-7,-8"/>
+    <line x1="-20" y1="-3" x2="-8" y2="-3"/>
+    
+    <!-- Right tower -->
+    <rect x="8" y="-8" width="12" height="22" rx="1"/>
+    <path d="M7,-8 L14,-18 L21,-8"/>
+    <line x1="8" y1="-3" x2="20" y2="-3"/>
+    
+    <!-- Main keep -->
+    <rect x="-8" y="-2" width="16" height="16" rx="1"/>
+    <path d="M-10,-2 L0,-14 L10,-2"/>
+    
+    <!-- Gate -->
+    <path d="M-5,14 L-5,6 A5,5 0 0,1 5,6 L5,14" fill="rgba(0,0,0,0.4)"/>
+    
+    <!-- Flag -->
+    <line x1="0" y1="-14" x2="0" y2="-24"/>
+    <path d="M0,-24 L12,-20 L0,-16" fill="#D4AF37" stroke="none"/>
+  </g>
+</svg>

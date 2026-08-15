@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="bossOuterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(239,68,68,0.50)"/>
+      <stop offset="100%" stop-color="rgba(239,68,68,0)"/>
+    </radialGradient>
+    <linearGradient id="bossBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1E2E"/>
+      <stop offset="100%" stop-color="#13131F"/>
+    </linearGradient>
+    <linearGradient id="bossRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F87171"/>
+      <stop offset="100%" stop-color="#EF4444"/>
+    </linearGradient>
+  </defs>
+  
+  <circle cx="50" cy="50" r="48" fill="url(#bossOuterGlow)"/>
+  <circle cx="50" cy="50" r="40" fill="url(#bossBody)" stroke="#EF4444" stroke-width="3"/>
+  <circle cx="50" cy="50" r="33" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="4,4"/>
+  
+  <!-- Dragon head -->
+  <g transform="translate(50, 52)" fill="none" stroke="url(#bossRed)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Head shape -->
+    <path d="M-18,-8 L-8,-22 L0,-18 L8,-22 L18,-8 L14,8 L6,16 L0,14 L-6,16 L-14,8 Z" fill="#13131F"/>
+    
+    <!-- Eyes -->
+    <path d="M-10,-6 L-4,-6 L-6,-2 Z" fill="#EF4444" stroke="none"/>
+    <path d="M10,-6 L4,-6 L6,-2 Z" fill="#EF4444" stroke="none"/>
+    
+    <!-- Nostril/snout -->
+    <path d="M-4,6 L0,10 L4,6" fill="none"/>
+    <circle cx="-3" cy="8" r="1" fill="#EF4444" stroke="none"/>
+    <circle cx="3" cy="8" r="1" fill="#EF4444" stroke="none"/>
+    
+    <!-- Horns -->
+    <path d="M-8,-20 L-16,-28"/>
+    <path d="M8,-20 L16,-28"/>
+    
+    <!-- Spikes -->
+    <path d="M-14,8 L-20,12 L-14,14" fill="#EF4444" stroke="none"/>
+    <path d="M14,8 L20,12 L14,14" fill="#EF4444" stroke="none"/>
+    <path d="M0,14 L0,22" stroke-linecap="round"/>
+  </g>
+</svg>

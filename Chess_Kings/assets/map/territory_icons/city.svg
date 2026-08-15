@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <defs>
+    <radialGradient id="cityGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(171,134,185,0.25)"/>
+      <stop offset="100%" stop-color="rgba(171,134,185,0)"/>
+    </radialGradient>
+    <linearGradient id="cityPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#AB86B9"/>
+      <stop offset="100%" stop-color="#7A5D85"/>
+    </linearGradient>
+  </defs>
+  
+  <circle cx="40" cy="40" r="36" fill="url(#cityGlow)"/>
+  <circle cx="40" cy="40" r="30" fill="#13131F" stroke="#AB86B9" stroke-width="2"/>
+  
+  <g fill="url(#cityPurple)" stroke="none">
+    <!-- Buildings -->
+    <rect x="12" y="42" width="12" height="18" rx="1"/>
+    <rect x="26" y="32" width="14" height="28" rx="1"/>
+    <rect x="42" y="38" width="12" height="22" rx="1"/>
+    <rect x="56" y="44" width="12" height="16" rx="1"/>
+    
+    <!-- Tower -->
+    <rect x="30" y="22" width="10" height="12" rx="1"/>
+    <path d="M28,22 L35,14 L42,22 Z"/>
+    
+    <!-- Windows -->
+    <rect x="15" y="46" width="3" height="4" fill="#050508" opacity="0.6"/>
+    <rect x="19" y="52" width="3" height="4" fill="#050508" opacity="0.6"/>
+    <rect x="30" y="38" width="3" height="4" fill="#050508" opacity="0.6"/>
+    <rect x="36" y="44" width="3" height="4" fill="#050508" opacity="0.6"/>
+    <rect x="45" y="44" width="3" height="4" fill="#050508" opacity="0.6"/>
+    <rect x="59" y="48" width="3" height="4" fill="#050508" opacity="0.6"/>
+    
+    <!-- Ground -->
+    <rect x="10" y="60" width="60" height="4" fill="#6B4E45"/>
+  </g>
+</svg>

@@ -1,0 +1,1 @@
+C:\Users\USER\AndroidStudioProjects\Chess_Kings\build\app\intermediates\cxx\RelWithDebInfo\1u1b3h1f\obj\x86_64

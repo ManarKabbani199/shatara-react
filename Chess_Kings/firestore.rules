@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// Firestore security rules for Chess_Cleverness (Shatara Kings).
+//
+// Covers the Conquest Map progress storage. Review/extend the rules for
+// other collections (games, tweets, products, ...) before deploying —
+// this file intentionally does not open them up.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // User profiles: only the owner can read/write their document.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Conquest Map progress (users/{uid}/conquest/progress):
+      // only the owner can read/write their own campaign progress.
+      match /conquest/{document} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}

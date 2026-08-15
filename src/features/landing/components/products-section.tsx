@@ -24,7 +24,7 @@ const products: Product[] = [
     price: 249.99,
     discount: 30,
     image: '/assets/images/product-sha-26-004-s2.png',
-    link: 'https://shatarachess.com/p/3RfSL1',
+    link: 'https://store.shatara.sa',
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const products: Product[] = [
     price: 249.99,
     discount: 30,
     image: '/assets/images/product-sha-26-001-s1.jpg',
-    link: 'https://shatarachess.com/p/sha-26-001-s1-hkyb-rkaa-mydan-shtar-mtoy-CfZtP',
+    link: 'https://store.shatara.sa',
   },
 ];
 

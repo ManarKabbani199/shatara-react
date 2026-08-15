@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "810870348638",
+    "project_id": "chesskings-cfcbb",
+    "storage_bucket": "chesskings-cfcbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810870348638:android:5c50307c70a50149870dcf",
+        "android_client_info": {
+          "package_name": "com.example.chess_kings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810870348638-g52fq63p80mt79432g7g2a18jr9jdnd8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chess_kings",
+            "certificate_hash": "9c44bedc93bafeff2c65e5dd4a70112739b6cde6"
+          }
+        },
+        {
+          "client_id": "810870348638-51qa1qqcpni0hlmb78ht5424arkuap9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGgDQO1gYOQUK7RfBz51p-8_Gsn1sTC4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810870348638-51qa1qqcpni0hlmb78ht5424arkuap9p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "810870348638-6im737uv9prpho4f8ngp64mh26059609.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chessKings"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

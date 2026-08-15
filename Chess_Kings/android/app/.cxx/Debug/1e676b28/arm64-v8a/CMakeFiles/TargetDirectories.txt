@@ -1,0 +1,2 @@
+C:/Users/USER/AndroidStudioProjects/Chess_Kings/android/app/.cxx/Debug/1e676b28/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/USER/AndroidStudioProjects/Chess_Kings/android/app/.cxx/Debug/1e676b28/arm64-v8a/CMakeFiles/rebuild_cache.dir

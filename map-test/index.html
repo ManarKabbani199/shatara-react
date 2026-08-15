@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خريطة الفتح | Shatara Conquest Map</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #D4AF37;
+      --gold-glow: rgba(212,175,55,0.6);
+      --green: #4CAF50;
+      --green-glow: rgba(76,175,80,0.6);
+      --purple: #AB86B9;
+      --purple-glow: rgba(171,134,185,0.6);
+      --locked: #4A4458;
+      --bg: #050508;
+      --panel: rgba(22,18,34,0.95);
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .app {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Animated background */
+    .bg-layers {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-layers::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(171,134,185,0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(212,175,55,0.12) 0%, transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(76,175,80,0.08) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse {
+      from { opacity: 0.7; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.05); }
+    }
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1.5px 1.5px at 50px 120px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 90px 80px, rgba(255,255,255,0.2), transparent);
+      background-size: 200px 200px;
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.4; }
+      to { opacity: 0.8; }
+    }
+    #particleCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* Header */
+    .header {
+      position: relative;
+      z-index: 10;
+      padding: 24px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(5,5,8,0.9) 0%, transparent 100%);
+    }
+    .header h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 40px rgba(212,175,55,0.3);
+      margin-bottom: 8px;
+    }
+    .header p { color: rgba(255,255,255,0.6); font-size: 1.1rem; }
+    /* Stats bar */
+    .stats-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding: 0 24px 16px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px 24px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .stat.gold { color: var(--gold); border-color: var(--gold-glow); box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+    .stat.xp { color: var(--purple); border-color: var(--purple-glow); box-shadow: 0 0 20px rgba(171,134,185,0.15); }
+    /* Controls */
+    .controls {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 0 24px 20px;
+    }
+    .controls button {
+      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .controls button:hover {
+      background: rgba(212,175,55,0.2);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212,175,55,0.2);
+    }
+    .controls button.primary { background: linear-gradient(135deg, var(--gold), #B8860B); color: #000; border: none; }
+    /* Map container */
+    .map-section {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      padding: 0 24px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .map-wrapper {
+      width: 100%;
+      max-width: 1400px;
+      border-radius: 32px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 0 60px rgba(171,134,185,0.15),
+        inset 0 0 80px rgba(0,0,0,0.5);
+      background: radial-gradient(circle at 50% 50%, rgba(26,22,37,0.9) 0%, rgba(5,5,8,0.98) 100%);
+    }
+    .map-aspect { position: relative; width: 100%; padding-bottom: 62.5%; }
+    #mapSvg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .node-group { cursor: pointer; }
+    .node-label {
+      font-size: 11px;
+      fill: rgba(255,255,255,0.85);
+      font-weight: 700;
+      text-anchor: middle;
+      pointer-events: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      font-family: 'Cairo', sans-serif;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+      margin: 24px 0;
+      z-index: 10;
+    }
+    .legend-item { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.7); font-weight: 600; }
+    .legend-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 12px currentColor;
+    }
+    /* Detail panel */
+    .detail-panel {
+      position: fixed;
+      z-index: 100;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%) translateX(120%);
+      width: 340px;
+      max-width: calc(100vw - 48px);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 28px;
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .detail-panel.active { transform: translateY(-50%) translateX(0); }
+    .detail-panel .region-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .detail-panel h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .detail-panel .defender {
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    .rewards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .reward {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .reward-value { font-size: 1.4rem; font-weight: 900; }
+    .reward-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+    .difficulty-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .difficulty-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .battle-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      color: #000;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(212,175,55,0.3);
+    }
+    .battle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(212,175,55,0.5);
+    }
+    .battle-btn:disabled {
+      background: #4A4458;
+      color: rgba(255,255,255,0.4);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (max-width: 768px) {
+      .detail-panel {
+        right: 50%;
+        top: auto;
+        bottom: 24px;
+        transform: translate(50%, 120%);
+        width: calc(100vw - 32px);
+      }
+      .detail-panel.active { transform: translate(50%, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="bg-layers"><div class="stars"></div></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <header class="header">
+      <h1>خريطة الفتح</h1>
+      <p>انطلق في رحلتك عبر 30 إقليماً واهزم الزعماء الخمسة</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat gold"><span>💰</span> <span id="coins">0</span></div>
+      <div class="stat xp"><span>⭐</span> <span id="xp">0</span></div>
+      <div class="stat"><span>🏰</span> <span id="completed">0 / 30</span></div>
+    </div>
+
+    <div class="controls">
+      <button class="primary" onclick="resetProgress()">🔄 إعادة</button>
+      <button onclick="unlockAll()">✨ فتح الكل</button>
+      <button onclick="simulateCampaign()">⚔️ محاكاة حملة</button>
+      <button onclick="toggleSound()" id="soundBtn">🔊 صوت</button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#D4AF37;color:#D4AF37"></div> متاح</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4CAF50;color:#4CAF50"></div> مكتمل</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4A4458;color:#4A4458"></div> مقفل</div>
+      <div class="legend-item">👑 زعيم</div>
+    </div>
+
+    <section class="map-section">
+      <div class="map-wrapper">
+        <div class="map-aspect">
+          <svg id="mapSvg" viewBox="0 0 1440 900"></svg>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="detail-panel" id="detailPanel">
+    <button class="close-btn" onclick="closePanel()">×</button>
+    <span class="region-tag" id="regionTag">منطقة</span>
+    <h2 id="panelTitle">عنوان</h2>
+    <p class="defender" id="panelDefender">مدافع</p>
+    <div class="rewards">
+      <div class="reward"><div class="reward-value gold" id="rewardCoins">0</div><div class="reward-label">عملات</div></div>
+      <div class="reward"><div class="reward-value xp" id="rewardXp">0</div><div class="reward-label">خبرة</div></div>
+    </div>
+    <div class="difficulty-row">
+      <span style="color:rgba(255,255,255,0.6)">الصعوبة</span>
+      <span class="difficulty-badge" id="diffBadge">مبتدئ</span>
+    </div>
+    <button class="battle-btn" id="battleBtn" onclick="startBattle()">⚔️ بدء المعركة</button>
+  </div>
+
+  <script>
+    const MAP_W = 1440, MAP_H = 900;
+    let soundEnabled = true;
+    let selectedTerritory = null;
+    let unlocked = new Set(['T000']);
+    let completed = new Set();
+    let coins = 0, xp = 0;
+
+    const regions = {
+      starting: { name: 'أراضي البداية', color: '#4CAF50' },
+      desert: { name: 'فيافي الصحراء', color: '#FF9800' },
+      forest: { name: 'مملكة الغابات', color: '#2E7D32' },
+      mountain: { name: 'ممر الجبال', color: '#607D8B' },
+      city: { name: 'إقليم العاصمة', color: '#AB86B9' }
+    };
+
+    const territories = [
+      {id:'T000',name:'قلعة الفجر',region:'starting',x:0.12,y:0.82,conn:['T001','T002'],diff:'مبتدئ',title:'حارس القلعة',coins:0,xp:0,boss:false,start:true},
+      {id:'T001',name:'سهول البداية',region:'starting',x:0.22,y:0.72,conn:['T000','T003','T004'],diff:'مبتدئ',title:'جندي مبتدئ',coins:10,xp:5,boss:false},
+      {id:'T002',name:'مزرعة الوادي',region:'starting',x:0.18,y:0.62,conn:['T000','T004','T005'],diff:'مبتدئ',title:'فلاح محلي',coins:10,xp:5,boss:false},
+      {id:'T003',name:'برج الحراسة',region:'starting',x:0.32,y:0.78,conn:['T001','T006'],diff:'مبتدئ',title:'حارس البرج',coins:15,xp:8,boss:false},
+      {id:'T004',name:'خيمة التجار',region:'starting',x:0.28,y:0.62,conn:['T001','T002','T005','T007'],diff:'مبتدئ',title:'تاجر مسلح',coins:15,xp:8,boss:false},
+      {id:'T005',name:'معسكر التدريب',region:'starting',x:0.24,y:0.50,conn:['T002','T004','T008','T012'],diff:'متوسط',title:'مدرب المقاتلين',coins:25,xp:12,boss:false},
+      {id:'T006',name:'بوابة الصحراء',region:'desert',x:0.42,y:0.80,conn:['T003','T007','T009'],diff:'متوسط',title:'حارس البوابة',coins:25,xp:12,boss:false},
+      {id:'T007',name:'واحة النخيل',region:'desert',x:0.40,y:0.64,conn:['T004','T006','T008','T010'],diff:'متوسط',title:'رئيس القبيلة',coins:25,xp:12,boss:false},
+      {id:'T008',name:'معسكر الرمال',region:'desert',x:0.36,y:0.48,conn:['T005','T007','T010','T013'],diff:'متوسط',title:'قائد الرمال',coins:30,xp:15,boss:false},
+      {id:'T009',name:'مقبرة العظماء',region:'desert',x:0.52,y:0.78,conn:['T006','T010','T011'],diff:'متوسط',title:'حارس المقبرة',coins:30,xp:15,boss:false},
+      {id:'T010',name:'سوق الصحراء',region:'desert',x:0.48,y:0.58,conn:['T007','T008','T009','T011','T014'],diff:'متوسط',title:'تاجر الصحراء',coins:35,xp:18,boss:false},
+      {id:'T011',name:'عرين الرياح',region:'desert',x:0.56,y:0.68,conn:['T009','T010','T015'],diff:'متقدم',title:'سيد الرياح',coins:60,xp:30,boss:true},
+      {id:'T012',name:'غابة الصنوبر',region:'forest',x:0.22,y:0.36,conn:['T005','T013','T016'],diff:'متوسط',title:'حارس الغابة',coins:30,xp:15,boss:false},
+      {id:'T013',name:'مخبأ اللصوص',region:'forest',x:0.32,y:0.40,conn:['T008','T012','T014','T017'],diff:'متوسط',title:'زعيم اللصوص',coins:35,xp:18,boss:false},
+      {id:'T014',name:'بحيرة الضباب',region:'forest',x:0.44,y:0.46,conn:['T010','T013','T015','T018'],diff:'متوسط',title:'حارس البحيرة',coins:35,xp:18,boss:false},
+      {id:'T015',name:'معبد القمر',region:'forest',x:0.56,y:0.54,conn:['T011','T014','T019'],diff:'متقدم',title:'كاهن القمر',coins:50,xp:25,boss:true},
+      {id:'T016',name:'قرية الأقزام',region:'forest',x:0.20,y:0.24,conn:['T012','T017','T020'],diff:'متوسط',title:'زعيم الأقزام',coins:40,xp:20,boss:false},
+      {id:'T017',name:'كهف الوحوش',region:'forest',x:0.32,y:0.28,conn:['T013','T016','T018','T021'],diff:'متوسط',title:'ملك الوحوش',coins:40,xp:20,boss:false},
+      {id:'T018',name:'ممر الجبال',region:'mountain',x:0.46,y:0.34,conn:['T014','T017','T019','T022'],diff:'متقدم',title:'حارس الممر',coins:45,xp:22,boss:false},
+      {id:'T019',name:'قلعة الجليد',region:'mountain',x:0.58,y:0.40,conn:['T015','T018','T023','T024'],diff:'متقدم',title:'سيد الجليد',coins:55,xp:28,boss:true},
+      {id:'T020',name:'منجم الفضة',region:'mountain',x:0.26,y:0.16,conn:['T016','T021'],diff:'متقدم',title:'مدير المنجم',coins:50,xp:25,boss:false},
+      {id:'T021',name:'جسر الموت',region:'mountain',x:0.38,y:0.20,conn:['T017','T020','T022'],diff:'متقدم',title:'حارس الجسر',coins:50,xp:25,boss:false},
+      {id:'T022',name:'قمة العواصف',region:'mountain',x:0.48,y:0.22,conn:['T018','T021','T023'],diff:'متقدم',title:'سيد العواصف',coins:55,xp:28,boss:false},
+      {id:'T023',name:'عش التنين',region:'mountain',x:0.58,y:0.26,conn:['T019','T022','T025'],diff:'متقدم',title:'التنين العجوز',coins:70,xp:35,boss:true},
+      {id:'T024',name:'ضواحي العاصمة',region:'city',x:0.70,y:0.34,conn:['T019','T025','T026'],diff:'متقدم',title:'قائد الحرس',coins:60,xp:30,boss:false},
+      {id:'T025',name:'سوق العاصمة',region:'city',x:0.72,y:0.22,conn:['T023','T024','T027'],diff:'متقدم',title:'تاجر العاصمة',coins:60,xp:30,boss:false},
+      {id:'T026',name:'ساحة الأبطال',region:'city',x:0.78,y:0.44,conn:['T024','T027','T028'],diff:'متقدم',title:'بطل الساحة',coins:65,xp:32,boss:false},
+      {id:'T027',name:'قصر الملك',region:'city',x:0.82,y:0.30,conn:['T025','T026','T028'],diff:'متقدم',title:'قائد القصر',coins:75,xp:38,boss:false},
+      {id:'T028',name:'برج السحر',region:'city',x:0.86,y:0.46,conn:['T026','T027','T029'],diff:'متقدم',title:'الساحر الأعظم',coins:80,xp:40,boss:false},
+      {id:'T029',name:'عرش المملكة',region:'city',x:0.90,y:0.34,conn:['T028'],diff:'متقدم',title:'ملك الظلام',coins:200,xp:100,boss:true}
+    ];
+
+    function getState(t) {
+      if (completed.has(t.id)) return 'completed';
+      if (unlocked.has(t.id)) return 'unlocked';
+      return 'locked';
+    }
+
+    function color(state) {
+      if (state === 'completed') return '#4CAF50';
+      if (state === 'unlocked') return '#D4AF37';
+      return '#4A4458';
+    }
+
+    // Web Audio synth for sound effects
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type, duration, delay = 0) {
+      if (!soundEnabled) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + delay);
+      osc.stop(audioCtx.currentTime + delay + duration);
+    }
+    function playHover() { playTone(520, 'sine', 0.12); }
+    function playClick() { playTone(880, 'triangle', 0.15); playTone(1100, 'triangle', 0.1, 0.05); }
+    function playUnlock() {
+      [523, 659, 784, 1047].forEach((f, i) => playTone(f, 'sine', 0.25, i * 0.08));
+    }
+    function playVictory() {
+      [392, 523, 659, 784, 1047].forEach((f, i) => playTone(f, 'triangle', 0.3, i * 0.1));
+    }
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundBtn').textContent = soundEnabled ? '🔊 صوت' : '🔇 صامت';
+    }
+
+    // Particle system
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3 - 0.2;
+        this.life = Math.random() * 100 + 100;
+        this.opacity = Math.random() * 0.5 + 0.2;
+        this.color = Math.random() > 0.6 ? '#D4AF37' : Math.random() > 0.5 ? '#AB86B9' : '#fff';
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        if (this.life <= 0 || this.y < -10) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+    for (let i = 0; i < 80; i++) particles.push(new Particle());
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Map rendering
+    function render() {
+      const svg = document.getElementById('mapSvg');
+      svg.innerHTML = `
+        <defs>
+          <filter id="glow-gold" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-green" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-purple" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="pathActive" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#D4AF37" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+      `;
+
+      // Paths
+      const seen = new Set();
+      territories.forEach(t => {
+        t.conn.forEach(cid => {
+          if (t.id >= cid) return;
+          const c = territories.find(x => x.id === cid);
+          if (!c) return;
+          const key = t.id + '-' + cid;
+          if (seen.has(key)) return;
+          seen.add(key);
+          const s1 = getState(t), s2 = getState(c);
+          const state = (s1 === 'completed' && s2 === 'completed') ? 'completed' : (s1 !== 'locked' && s2 !== 'locked') ? 'unlocked' : 'locked';
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', t.x * MAP_W);
+          line.setAttribute('y1', t.y * MAP_H);
+          line.setAttribute('x2', c.x * MAP_W);
+          line.setAttribute('y2', c.y * MAP_H);
+          line.setAttribute('stroke', state === 'completed' ? '#4CAF50' : state === 'unlocked' ? '#D4AF37' : '#2A2538');
+          line.setAttribute('stroke-width', state === 'locked' ? 2 : 4);
+          line.setAttribute('stroke-linecap', 'round');
+          line.setAttribute('class', 'map-path');
+          if (state !== 'locked') {
+            line.setAttribute('filter', state === 'completed' ? 'url(#glow-green)' : 'url(#glow-gold)');
+          }
+          svg.appendChild(line);
+        });
+      });
+
+      // Nodes
+      territories.forEach((t, index) => {
+        const state = getState(t);
+        const cx = t.x * MAP_W;
+        const cy = t.y * MAP_H;
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'node-group');
+        g.setAttribute('transform', `translate(${cx},${cy})`);
+        g.setAttribute('data-id', t.id);
+        g.style.opacity = '0';
+
+        // Outer aura
+        const aura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        aura.setAttribute('r', t.boss ? 28 : 20);
+        aura.setAttribute('fill', color(state));
+        aura.setAttribute('opacity', '0.15');
+        if (state !== 'locked') aura.setAttribute('filter', t.boss ? 'url(#glow-purple)' : (state === 'completed' ? 'url(#glow-green)' : 'url(#glow-gold)'));
+        g.appendChild(aura);
+
+        // Pulse ring
+        if (state === 'unlocked' || t.boss) {
+          const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          pulse.setAttribute('r', t.boss ? 24 : 18);
+          pulse.setAttribute('fill', 'none');
+          pulse.setAttribute('stroke', color(state));
+          pulse.setAttribute('stroke-width', '2');
+          pulse.setAttribute('opacity', '0.6');
+          pulse.setAttribute('class', 'pulse-ring');
+          g.appendChild(pulse);
+        }
+
+        // Main node
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', t.boss ? 18 : 13);
+        circle.setAttribute('fill', state === 'locked' ? '#2A2538' : color(state));
+        circle.setAttribute('stroke', '#fff');
+        circle.setAttribute('stroke-width', t.boss ? 3 : 2);
+        circle.setAttribute('class', 'node-circle');
+        g.appendChild(circle);
+
+        // Icon
+        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        icon.setAttribute('text-anchor', 'middle');
+        icon.setAttribute('y', 5);
+        icon.setAttribute('font-size', t.boss ? 16 : 12);
+        icon.textContent = state === 'locked' ? '🔒' : t.boss ? '👑' : t.start ? '🏰' : state === 'completed' ? '✓' : '⚔';
+        g.appendChild(icon);
+
+        // Label
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('class', 'node-label');
+        label.setAttribute('y', t.boss ? 38 : 32);
+        label.textContent = t.name;
+        g.appendChild(label);
+
+        // Boss glow ring animation
+        if (t.boss && state !== 'locked') {
+          const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          ring.setAttribute('r', 30);
+          ring.setAttribute('fill', 'none');
+          ring.setAttribute('stroke', '#D4AF37');
+          ring.setAttribute('stroke-width', '1');
+          ring.setAttribute('stroke-dasharray', '4 4');
+          ring.setAttribute('class', 'boss-ring');
+          g.appendChild(ring);
+        }
+
+        g.addEventListener('mouseenter', () => { playHover(); hoverNode(g, t); });
+        g.addEventListener('mouseleave', () => leaveNode(g));
+        g.addEventListener('click', () => clickNode(t));
+
+        svg.appendChild(g);
+
+        // Entrance animation
+        gsap.to(g, { opacity: 1, scale: 1, duration: 0.5, delay: index * 0.03, ease: 'back.out(1.7)', transformOrigin: 'center' });
+      });
+
+      // Animate pulse rings
+      gsap.utils.toArray('.pulse-ring').forEach(ring => {
+        gsap.to(ring, { r: parseFloat(ring.getAttribute('r')) + 10, opacity: 0, duration: 1.5, repeat: -1, ease: 'power1.out' });
+      });
+      gsap.utils.toArray('.boss-ring').forEach(ring => {
+        gsap.to(ring, { rotation: 360, duration: 20, repeat: -1, ease: 'none', transformOrigin: 'center' });
+      });
+    }
+
+    function hoverNode(g, t) {
+      gsap.to(g.querySelector('.node-circle'), { scale: 1.25, duration: 0.3, ease: 'back.out(2)', transformOrigin: 'center' });
+      gsap.to(g, { scale: 1.1, duration: 0.3, transformOrigin: 'center' });
+    }
+    function leaveNode(g) {
+      gsap.to(g.querySelector('.node-circle'), { scale: 1, duration: 0.3, transformOrigin: 'center' });
+      gsap.to(g, { scale: 1, duration: 0.3, transformOrigin: 'center' });
+    }
+
+    function clickNode(t) {
+      playClick();
+      selectedTerritory = t;
+      const state = getState(t);
+      const panel = document.getElementById('detailPanel');
+      const region = regions[t.region];
+
+      document.getElementById('regionTag').textContent = region.name;
+      document.getElementById('regionTag').style.background = region.color + '33';
+      document.getElementById('regionTag').style.color = region.color;
+      document.getElementById('panelTitle').textContent = t.name;
+      document.getElementById('panelDefender').textContent = t.title;
+      document.getElementById('rewardCoins').textContent = '+' + t.coins;
+      document.getElementById('rewardXp').textContent = '+' + t.xp;
+
+      const badge = document.getElementById('diffBadge');
+      badge.textContent = t.diff;
+      badge.style.background = (t.diff === 'مبتدئ' ? '#4CAF50' : t.diff === 'متوسط' ? '#FF9800' : '#F44336') + '33';
+      badge.style.color = t.diff === 'مبتدئ' ? '#4CAF50' : t.diff === 'متوسط' ? '#FF9800' : '#F44336';
+
+      const btn = document.getElementById('battleBtn');
+      if (state === 'completed') {
+        btn.textContent = '✅ تم الفتح';
+        btn.disabled = true;
+      } else if (state === 'locked') {
+        btn.textContent = '🔒 مقفل';
+        btn.disabled = true;
+      } else {
+        btn.textContent = '⚔️ بدء المعركة';
+        btn.disabled = false;
+      }
+
+      panel.classList.add('active');
+    }
+
+    function closePanel() {
+      document.getElementById('detailPanel').classList.remove('active');
+    }
+
+    function startBattle() {
+      if (!selectedTerritory) return;
+      playVictory();
+      completed.add(selectedTerritory.id);
+      selectedTerritory.conn.forEach(id => unlocked.add(id));
+      coins += selectedTerritory.coins;
+      xp += selectedTerritory.xp;
+      updateStats();
+      closePanel();
+      render();
+    }
+
+    function updateStats() {
+      document.getElementById('coins').textContent = coins;
+      document.getElementById('xp').textContent = xp;
+      document.getElementById('completed').textContent = completed.size + ' / 30';
+      gsap.from('.stat', { scale: 1.2, duration: 0.3, ease: 'back.out(2)' });
+    }
+
+    function resetProgress() {
+      unlocked = new Set(['T000']);
+      completed = new Set();
+      coins = 0;
+      xp = 0;
+      updateStats();
+      closePanel();
+      render();
+    }
+
+    function unlockAll() {
+      territories.forEach(t => unlocked.add(t.id));
+      updateStats();
+      closePanel();
+      render();
+    }
+
+    async function simulateCampaign() {
+      resetProgress();
+      const order = ['T000','T001','T002','T003','T004','T005','T006','T007','T008','T009','T010','T011','T012','T013','T014','T015','T016','T017','T018','T019'];
+      for (const id of order) {
+        if (!unlocked.has(id)) continue;
+        completed.add(id);
+        const t = territories.find(x => x.id === id);
+        t.conn.forEach(c => unlocked.add(c));
+        coins += t.coins;
+        xp += t.xp;
+        updateStats();
+        playUnlock();
+        render();
+        await new Promise(r => setTimeout(r, 300));
+      }
+    }
+
+    // Init
+    updateStats();
+    render();
+  </script>
+</body>
+</html>

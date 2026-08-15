@@ -1,0 +1,1 @@
+C:\Users\USER\AndroidStudioProjects\Chess_Kings\build\app\intermediates\cxx\Debug\1e676b28\obj\armeabi-v7a

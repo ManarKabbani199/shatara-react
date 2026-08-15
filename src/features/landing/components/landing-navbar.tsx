@@ -207,7 +207,6 @@ export function LandingNavbar() {
                 <NavIcon src="/assets/images/book.jpeg" alt="دليل شطارة" />
                 دليل شطارة
               </a>
-
               <hr className="border-brand-brown/10 my-2" />
 
               {mounted && isLoggedIn ? (

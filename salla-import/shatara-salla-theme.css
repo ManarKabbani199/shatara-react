@@ -1,0 +1,62 @@
+/* 🎨 Shatara Brand Theme — Salla رائد theme
+   Paste in: Theme editor → Advanced customization → Customize with CSS
+   (Requires Salla Special or Pro plan)
+   Brand colors from shatara.sa website (src/config/constants.ts) */
+
+:root {
+  /* Primary brand color (buttons, links, header accents) */
+  --color-primary: #6B4E45;
+  --color-primary-dark: #563D36;
+  --color-primary-light: #8A675C;
+
+  /* Secondary brand color */
+  --color-secondary: #AB86B9;
+  --color-secondary-dark: #96709F;
+
+  /* Page background */
+  --bg-body: #FFFFFF;
+}
+
+/* Sale / discount badges → brand green */
+.badge-sale,
+.sale-badge,
+.product-card .badge {
+  background-color: #06AC2A !important;
+  color: #FFFFFF !important;
+}
+
+/* Buttons → brand brown with hover effect */
+.s-button,
+.s-button-primary,
+button.s-button {
+  background-color: #6B4E45 !important;
+  border-color: #6B4E45 !important;
+  border-radius: 10px !important;
+}
+
+.s-button:hover,
+.s-button-primary:hover {
+  background-color: #563D36 !important;
+  border-color: #563D36 !important;
+}
+
+/* Product price color */
+.product-price,
+.s-product-card-price,
+.price {
+  color: #6B4E45 !important;
+  font-weight: 700;
+}
+
+/* Old (crossed) price → softer */
+.product-price del,
+.s-product-card-price del,
+.price del {
+  color: #9CA3AF !important;
+}
+
+/* Footer */
+footer,
+.s-footer {
+  background-color: #6B4E45 !important;
+}

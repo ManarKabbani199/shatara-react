@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 24" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="pathActiveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#AB86B9"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#AB86B9"/>
+    </linearGradient>
+  </defs>
+  <line x1="0" y1="12" x2="120" y2="12" stroke="url(#pathActiveGrad)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="0" y1="12" x2="120" y2="12" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

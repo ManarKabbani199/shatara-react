@@ -50,7 +50,7 @@ backg-q90.jpg
 /shatara-develop/
 
 # Chess_Kings Flutter game project (separate/untracked)
-/Chess_Kings/
+# /Chess_Kings/  (now tracked)
 
 # typescript
 *.tsbuildinfo

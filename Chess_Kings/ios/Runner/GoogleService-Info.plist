@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>810870348638-6im737uv9prpho4f8ngp64mh26059609.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.810870348638-6im737uv9prpho4f8ngp64mh26059609</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>810870348638-2c84pgkidigfmd7hqq2k937b473009hu.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDeEqrMMbm_pC9Oap7kxzuaN5G7Gm7_iVk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>810870348638</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.chessKings</string>
+	<key>PROJECT_ID</key>
+	<string>chesskings-cfcbb</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chesskings-cfcbb.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:810870348638:ios:a3897cea5ab71f1b870dcf</string>
+</dict>
+</plist>
