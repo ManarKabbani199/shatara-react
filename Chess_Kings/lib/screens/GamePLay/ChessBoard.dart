@@ -13,8 +13,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
-import '../../Widget/HomePage/BottomNavbar.dart';
-import '../../Widget/HomePage/FooterCopyright.dart';
 import '../../Widget/PlayGame/CustomPlayNavbar.dart';
 import '../../shared_data.dart' as shared;
 import '../../models/territory_model.dart';
@@ -609,11 +607,12 @@ class _ChessBoardState extends State<ChessBoard> {
 
   Offset? enPassantTarget;
 
-  List<String> movesHistory = [];
+  /// سجل النقلات (تصميم الماكيت: من · إلى · رقم الحركة)
+  List<_MoveLogEntry> movesHistory = [];
 
   /// ثيم خاص يعرض صورة الرقعة بدل الألوان
   static const String kBoardImageTheme = 'board_image';
-  String currentTheme = kBoardImageTheme;
+  String currentTheme = 'purple';
   bool get _useBoardImage => currentTheme == kBoardImageTheme;
 
   // ===== Campaign power-ups & boosters (conquest shop) =====
@@ -1774,10 +1773,11 @@ class _ChessBoardState extends State<ChessBoard> {
 
   /// 💡 Hint power-up: highlights the best move for the player.
   void _useHint() {
-    if (widget.territory == null ||
-        isGameOver ||
-        _inventory.hints <= 0 ||
-        currentPlayerColor != playerColor) {
+    if (isGameOver || currentPlayerColor != playerColor) {
+      return;
+    }
+    // في وضع الحملة فقط: التلميح يستهلك من المخزون
+    if (widget.territory != null && _inventory.hints <= 0) {
       return;
     }
 
@@ -1813,8 +1813,10 @@ class _ChessBoardState extends State<ChessBoard> {
     }
     if (best == null) return;
 
-    _updateInventory((i) => i.copyWith(hints: i.hints - 1));
-    MapSoundService.play(MapSfx.shop);
+    if (widget.territory != null) {
+      _updateInventory((i) => i.copyWith(hints: i.hints - 1));
+      MapSoundService.play(MapSfx.shop);
+    }
     setState(() => _hintMove = best);
     // The hint fades after a few seconds.
     Future.delayed(const Duration(seconds: 4), () {
@@ -1838,11 +1840,13 @@ class _ChessBoardState extends State<ChessBoard> {
   /// answer. Only usable on the player's turn (after the AI responded).
   /// Note: castling-right flags are not restored (minor edge case).
   void _useUndo() {
-    if (widget.territory == null ||
-        isGameOver ||
-        _inventory.undos <= 0 ||
+    if (isGameOver ||
         currentPlayerColor != playerColor ||
         _boardSnapshots.length < 2) {
+      return;
+    }
+    // في وضع الحملة فقط: التراجع يستهلك من المخزون
+    if (widget.territory != null && _inventory.undos <= 0) {
       return;
     }
 
@@ -1855,8 +1859,10 @@ class _ChessBoardState extends State<ChessBoard> {
     _snapshotTurns.removeRange(
         _snapshotTurns.length - 2, _snapshotTurns.length);
 
-    _updateInventory((i) => i.copyWith(undos: i.undos - 1));
-    MapSoundService.play(MapSfx.shop);
+    if (widget.territory != null) {
+      _updateInventory((i) => i.copyWith(undos: i.undos - 1));
+      MapSoundService.play(MapSfx.shop);
+    }
     setState(() {
       board = cloneBoard(snapshot);
       currentPlayerColor = turn;
@@ -1870,9 +1876,8 @@ class _ChessBoardState extends State<ChessBoard> {
     });
   }
 
-  /// Records a pre-move snapshot for the undo power-up (campaign only).
+  /// Records a pre-move snapshot for the undo feature.
   void _pushSnapshot(PlayerColor sideToMove) {
-    if (widget.territory == null) return;
     _boardSnapshots.add(cloneBoard(board));
     _snapshotTurns.add(sideToMove);
     // Cap history to keep memory bounded.
@@ -2313,9 +2318,12 @@ class _ChessBoardState extends State<ChessBoard> {
         final pieceSymbol = _getPieceSymbol(movingPiece);
         final moveNotation =
             '$pieceSymbol ${_getSquareName(selectedRow!, selectedCol!)}-${_getSquareName(row, col)}';
-        movesHistory.add(movingColor == PlayerColor.white
-            ? '褐 $moveNotation'
-            : '黑 $moveNotation');
+        movesHistory.add(_MoveLogEntry(
+          label: moveNotation,
+          from: _getSquareName(selectedRow!, selectedCol!),
+          to: _getSquareName(row, col),
+          isWhite: movingColor == PlayerColor.white,
+        ));
 
         final localMoveType = movingPiece.type == PieceType.king &&
                 (row == selectedRow!) &&
@@ -2668,11 +2676,12 @@ class _ChessBoardState extends State<ChessBoard> {
     final moveNotation =
         '${_getPieceSymbol(movedPiece)} ${_getSquareName(fromRow, fromCol)}-${_getSquareName(toRow, toCol)}';
 
-    movesHistory.add(
-      aiMovingColor == PlayerColor.white
-          ? '褐 $moveNotation'
-          : '黑 $moveNotation',
-    );
+    movesHistory.add(_MoveLogEntry(
+      label: moveNotation,
+      from: _getSquareName(fromRow, fromCol),
+      to: _getSquareName(toRow, toCol),
+      isWhite: aiMovingColor == PlayerColor.white,
+    ));
 
     await _saveMoveToFirestore(
       from: _getSquareName(fromRow, fromCol),
@@ -3067,10 +3076,11 @@ class _ChessBoardState extends State<ChessBoard> {
         startProperTimer();
       });
 
-      movesHistory.add(
-        (color == PlayerColor.white ? '褐' : '黑') +
-            ' إدخال بيدق من الدعم إلى ${_getSquareName(fromRow, fromCol)}',
-      );
+      movesHistory.add(_MoveLogEntry(
+        label: 'إدخال بيدق من الدعم إلى ${_getSquareName(fromRow, fromCol)}',
+        to: _getSquareName(fromRow, fromCol),
+        isWhite: color == PlayerColor.white,
+      ));
 
       // ✅ مهم جداً: حفظ إدخال البيدق في الشبكي
       if (_isLocalFriendMode) {
@@ -3154,10 +3164,10 @@ class _ChessBoardState extends State<ChessBoard> {
       startProperTimer();
     });
 
-    movesHistory.add(
-      (piece.color == PlayerColor.white ? '褐' : '黑') +
-          ' ترقية ${_getPieceName(piece.type)} إلى ${_getPieceName(newType)}',
-    );
+    movesHistory.add(_MoveLogEntry(
+      label: 'ترقية ${_getPieceName(piece.type)} إلى ${_getPieceName(newType)}',
+      isWhite: piece.color == PlayerColor.white,
+    ));
 
     if (_isLocalFriendMode) {
       await _saveMoveToFirestore(
@@ -3200,9 +3210,10 @@ class _ChessBoardState extends State<ChessBoard> {
 
   Widget _buildLocalNetworkStatusCard() {
     if (!_isLocalFriendMode) {
-      return ElevatedButton(
-        onPressed: _showLocalFriendSetupDialog,
-        child: const Text('شبكي محلي'),
+      return _actionPill(
+        icon: Icons.wifi_tethering,
+        label: 'شبكي محلي',
+        onTap: _showLocalFriendSetupDialog,
       );
     }
 
@@ -3211,24 +3222,44 @@ class _ChessBoardState extends State<ChessBoard> {
         ? '-'
         : '${Uri.base.origin}/#/playNow?mode=friend&code=$code';
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('وضع الشبكي المحلي مفعل'),
-            const SizedBox(height: 8),
-            SelectableText('الكود: ${code ?? '-'}'),
-            const SizedBox(height: 8),
-            SelectableText(invite),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: _showLocalFriendSetupDialog,
-              child: const Text('إدارة المباراة'),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(blurRadius: 6, color: Colors.black12, offset: Offset(0, 2)),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'وضع الشبكي المحلي مفعل',
+            style: TextStyle(
+              fontFamily: 'Alexandria',
+              fontWeight: FontWeight.bold,
+              color: GameUiColors.darkText,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          SelectableText(
+            'الكود: ${code ?? '-'}',
+            style: const TextStyle(color: GameUiColors.darkText),
+          ),
+          const SizedBox(height: 8),
+          SelectableText(
+            invite,
+            style: const TextStyle(
+                color: GameUiColors.primaryPurple, fontSize: 12),
+          ),
+          const SizedBox(height: 10),
+          _actionPill(
+            icon: Icons.settings,
+            label: 'إدارة المباراة',
+            onTap: _showLocalFriendSetupDialog,
+          ),
+        ],
       ),
     );
   }
@@ -3511,13 +3542,13 @@ class _ChessBoardState extends State<ChessBoard> {
                                               _hintMove!.toCol == col));
 
                                   final backgroundColor = isSelected
-                                      ? Colors.greenAccent
+                                      ? GameUiColors.selectedSquare
                                       : isHintSquare
                                           ? const Color(0xFFAB86B9)
                                               .withValues(alpha: 0.65)
                                           : (isLastMoveFrom || isLastMoveTo)
-                                              ? Colors.amberAccent
-                                                  .withOpacity(0.5)
+                                              ? GameUiColors.primaryPurple
+                                                  .withOpacity(0.35)
                                               : _useBoardImage
                                                   ? Colors.transparent
                                                   : isWhiteTile
@@ -3536,9 +3567,19 @@ class _ChessBoardState extends State<ChessBoard> {
                                       child: Stack(
                                         children: [
                                           if (isPossibleMove)
-                                            Container(
-                                                color: Colors.green
-                                                    .withOpacity(0.3)),
+                                            Center(
+                                              child: FractionallySizedBox(
+                                                widthFactor: 0.34,
+                                                heightFactor: 0.34,
+                                                child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: GameUiColors.moveDot
+                                                        .withOpacity(0.9),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           if (piece != null)
                                             Center(
                                               child: Padding(
@@ -3572,7 +3613,8 @@ class _ChessBoardState extends State<ChessBoard> {
                                     child: Text(
                                       number.toString(),
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: GameUiColors.primaryPurple),
                                     ),
                                   ),
                                 );
@@ -3596,7 +3638,8 @@ class _ChessBoardState extends State<ChessBoard> {
                                 child: Text(
                                   String.fromCharCode(65 + letterIndex),
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      color: GameUiColors.primaryPurple),
                                 ),
                               ),
                             );
@@ -3617,7 +3660,7 @@ class _ChessBoardState extends State<ChessBoard> {
                 width: w,
                 height: h,
                 child: Container(
-                  color: const Color(0xFFFDF5F9),
+                  color: GameUiColors.scaffoldBg,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -3633,139 +3676,33 @@ class _ChessBoardState extends State<ChessBoard> {
                           ),
                           const SizedBox(height: 6),
 
-                          // 🔹 أزرار التحكم (إعادة – رئيسية – تدوير)
+                          // 🔹 أزرار الإجراءات (تلميح – تراجع – استسلام) + إعدادات/تدوير
                           SizedBox(
                             height: buttonsH,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // زر إعادة اللعب
-                                SizedBox(
-                                  width: 90,
-                                  height: 36,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFDDDDDC),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: _resetGame,
-                                    child: const Text(
-                                      'إعادة اللعب',
-                                      style: TextStyle(
-                                        color: Color(0xFF6B4E45),
-                                        fontFamily: 'Alexandria',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _actionPillsRow(),
+                                  const SizedBox(width: 8),
+                                  _roundIconButton(
+                                    icon: Icons.settings,
+                                    tooltip: 'الإعدادات',
+                                    onTap: _showSettingsDialog,
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-
-                                // زر الرئيسية
-                                SizedBox(
-                                  width: 90,
-                                  height: 36,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFAB86B9),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => Home()),
-                                        (route) => false,
-                                      );
-                                    },
-                                    child: const Text(
-                                      'الرئيسية',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Alexandria',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-
-                                // زر تدوير الرقعة
-                                SizedBox(
-                                  width: 100,
-                                  height: 36,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFB9A16B),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
+                                  const SizedBox(width: 6),
+                                  _roundIconButton(
+                                    icon: Icons.flip,
+                                    tooltip: 'تدوير الرقعة',
+                                    onTap: () {
                                       setState(() {
                                         isBoardFlipped = !isBoardFlipped;
                                       });
                                     },
-                                    child: const Text(
-                                      '🔁 تدوير الرقعة',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Alexandria',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-
-// زر تغيير لون الرقعة
-                                SizedBox(
-                                  width: 90,
-                                  height: 36,
-                                  child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
-                                      filled: true,
-                                      fillColor: Color(0xFFDDDDDC),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.zero,
-                                        borderSide: BorderSide.none,
-                                      ),
-                                    ),
-                                    value: currentTheme,
-                                    items: const [
-                                      DropdownMenuItem(
-                                          value: 'board_image',
-                                          child: Text("أرجواني")),
-                                      DropdownMenuItem(
-                                          value: 'brown',
-                                          child: Text("بني كلاسيكي")),
-                                      DropdownMenuItem(
-                                          value: 'black_white',
-                                          child: Text("أبيض / أسود")),
-                                      DropdownMenuItem(
-                                          value: 'blue_white',
-                                          child: Text("أبيض / أزرق")),
-                                      DropdownMenuItem(
-                                          value: 'brown_modern',
-                                          child: Text("بني حديث")),
-                                    ],
-                                    onChanged: (v) {
-                                      setState(() {
-                                        currentTheme = v!;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -3788,6 +3725,8 @@ class _ChessBoardState extends State<ChessBoard> {
                                 ),
                                 const SizedBox(width: 8),
                                 _clockCard(aiTimeRemaining),
+                                const SizedBox(width: 6),
+                                _playerAvatar(radius: 14),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -3812,6 +3751,8 @@ class _ChessBoardState extends State<ChessBoard> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                _playerAvatar(radius: 14),
+                                const SizedBox(width: 6),
                                 _clockCard(playerTimeRemaining),
                                 const SizedBox(width: 8),
                                 buildSupportRow(
@@ -3865,152 +3806,11 @@ class _ChessBoardState extends State<ChessBoard> {
               final double boardSize = math.min(w, h) * 0.7;
               final double tileSize = boardSize / 9;
 
-              Widget movesLog = Container(
-                width: tileSize * 3,
-                height: tileSize * 9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          isBoardFlipped = !isBoardFlipped;
-                        });
-                      },
-                      child: const Text('🔁 تدوير الرقعة'),
-                    ),
-                    const SizedBox(height: 16),
-                    const Center(
-                      child: Text(
-                        'سجل النقلات',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: movesHistory.length,
-                        itemBuilder: (context, index) {
-                          final move = movesHistory[index];
-                          return ListTile(
-                            dense: true,
-                            title: Text(move),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-
               // الرقعة الرئيسية لديسكتوب
               Widget mainBoard = RepaintBoundary(
                 key: _boardOnlyKey,
                 child: Column(
                   children: [
-                    // 🔵 شريط الأزرار في نسخة الكمبيوتر (Desktop)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // زر إعادة اللعب
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDDDDDC),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                          ),
-                          onPressed: _resetGame,
-                          child: const Text(
-                            "إعادة اللعب",
-                            style: TextStyle(
-                              color: Color(0xFF6B4E45),
-                              fontFamily: "Alexandria",
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-
-                        // زر الرئيسية
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFAB86B9),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context, rootNavigator: true)
-                                .pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) => Home()),
-                              (route) => false,
-                            );
-                          },
-                          child: const Text(
-                            "الرئيسية",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Alexandria",
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-
-                        // زر تدوير الرقعة
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFB9A16B),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isBoardFlipped = !isBoardFlipped;
-                            });
-                          },
-                          child: const Text(
-                            "🔁 تدوير الرقعة",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Alexandria",
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-
-                        // قائمة اختيار الألوان
-                        DropdownButton<String>(
-                          value: currentTheme,
-                          dropdownColor: Colors.white,
-                          items: const [
-                            DropdownMenuItem(
-                                value: 'board_image', child: Text("أرجواني")),
-                            DropdownMenuItem(
-                                value: 'brown', child: Text("بني كلاسيكي")),
-                            DropdownMenuItem(
-                                value: 'black_white',
-                                child: Text("أبيض / أسود")),
-                            DropdownMenuItem(
-                                value: 'blue_white',
-                                child: Text("أبيض / أزرق")),
-                            DropdownMenuItem(
-                                value: 'brown_modern', child: Text("بني حديث")),
-                          ],
-                          onChanged: (v) {
-                            setState(() {
-                              currentTheme = v!;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
                     SizedBox(
                       width: tileSize * 9,
                       height: tileSize * 9,
@@ -4069,13 +3869,13 @@ class _ChessBoardState extends State<ChessBoard> {
                                               _hintMove!.toCol == col));
 
                                   final backgroundColor = isSelected
-                                      ? Colors.greenAccent
+                                      ? GameUiColors.selectedSquare
                                       : isHintSquare
                                           ? const Color(0xFFAB86B9)
                                               .withValues(alpha: 0.65)
                                           : (isLastMoveFrom || isLastMoveTo)
-                                              ? Colors.amberAccent
-                                                  .withOpacity(0.5)
+                                              ? GameUiColors.primaryPurple
+                                                  .withOpacity(0.35)
                                               : _useBoardImage
                                                   ? Colors.transparent
                                                   : isWhiteTile
@@ -4094,9 +3894,19 @@ class _ChessBoardState extends State<ChessBoard> {
                                       child: Stack(
                                         children: [
                                           if (isPossibleMove)
-                                            Container(
-                                                color: Colors.green
-                                                    .withOpacity(0.3)),
+                                            Center(
+                                              child: FractionallySizedBox(
+                                                widthFactor: 0.34,
+                                                heightFactor: 0.34,
+                                                child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: GameUiColors.moveDot
+                                                        .withOpacity(0.9),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           if (piece != null)
                                             Center(
                                               child: Padding(
@@ -4130,7 +3940,8 @@ class _ChessBoardState extends State<ChessBoard> {
                                     child: Text(
                                       number.toString(),
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: GameUiColors.primaryPurple),
                                     ),
                                   ),
                                 );
@@ -4154,7 +3965,8 @@ class _ChessBoardState extends State<ChessBoard> {
                                 child: Text(
                                   String.fromCharCode(65 + letterIndex),
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      color: GameUiColors.primaryPurple),
                                 ),
                               ),
                             );
@@ -4165,53 +3977,130 @@ class _ChessBoardState extends State<ChessBoard> {
                   ],
                 ),
               );
-              // دعم للديسكتوب: عمودين (سود بالأعلى/بيض بالأسفل) مع تلوين الخلية
-              Widget sideBoard = SizedBox(
-                width: tileSize * 4,
+              // 🧩 بطاقة منطقة دعم واحدة (تصميم الماكيت: بطاقة فاتحة مستديرة)
+              Widget supportCard(PlayerColor color) {
+                return Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: GameUiColors.pillFill,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: _buildSupportPanelMobile(color, tileSize * 0.8),
+                );
+              }
+
+              // ◀ العمود الأيسر: ساعة الخصم + سجل النقلات + الأزرار + اسم اللاعب
+              Widget leftColumn = SizedBox(
+                width: tileSize * 3.4,
+                height: tileSize * 10,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSupportPanelMobile(
-                      isBoardFlipped ? PlayerColor.white : PlayerColor.black,
-                      tileSize,
+                    _clockCard(aiTimeRemaining),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: _movesLogCard(width: tileSize * 3.4),
                     ),
-                    const SizedBox(height: 8),
-                    _buildSupportPanelMobile(
-                      isBoardFlipped ? PlayerColor.black : PlayerColor.white,
-                      tileSize,
+                    const SizedBox(height: 10),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _actionPillsRow(),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
+                    _playerNameTag('الشاغب 2'),
                   ],
                 ),
               );
 
-              return SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      _buildLocalNetworkStatusCard(),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              // ▶ العمود الأيمن: اسم الخصم + إعدادات/تدوير + الدعم + ساعة اللاعب
+              Widget rightColumn = SizedBox(
+                width: tileSize * 3.4,
+                height: tileSize * 10,
+                child: Column(
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          movesLog,
-                          const SizedBox(width: 16),
-                          mainBoard,
-                          const SizedBox(width: 16),
-                          sideBoard,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _roundIconButton(
+                                icon: Icons.settings,
+                                tooltip: 'الإعدادات',
+                                onTap: _showSettingsDialog,
+                              ),
+                              const SizedBox(width: 8),
+                              _roundIconButton(
+                                icon: Icons.flip,
+                                tooltip: 'تدوير الرقعة',
+                                onTap: () {
+                                  setState(() {
+                                    isBoardFlipped = !isBoardFlipped;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 12),
+                          _playerNameTag('الشاغب 1'),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      if (widget.territory != null) ...[
-                        _buildCampaignPowerUpBar(),
-                        const SizedBox(height: 16),
-                      ],
-                      const BottomNavbar(),
-                      const SizedBox(height: 8),
-                      const FooterCopyright(),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 10),
+                    supportCard(isBoardFlipped
+                        ? PlayerColor.white
+                        : PlayerColor.black),
+                    const SizedBox(height: 10),
+                    supportCard(isBoardFlipped
+                        ? PlayerColor.black
+                        : PlayerColor.white),
+                    const Spacer(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _clockCard(playerTimeRemaining),
+                    ),
+                  ],
+                ),
+              );
+
+              return Container(
+                width: w,
+                height: h,
+                color: GameUiColors.scaffoldBg,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    _buildLocalNetworkStatusCard(),
+                    Expanded(
+                      child: Center(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  leftColumn,
+                                  const SizedBox(width: 20),
+                                  mainBoard,
+                                  const SizedBox(width: 20),
+                                  rightColumn,
+                                ],
+                              ),
+                              if (widget.territory != null) ...[
+                                const SizedBox(height: 16),
+                                _buildCampaignPowerUpBar(),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             }
@@ -4392,21 +4281,370 @@ class _ChessBoardState extends State<ChessBoard> {
     return '$columnLetter$rowNumber';
   }
 
+  /// 📝 بطاقة سجل النقلات (تصميم الماكيت)
+  Widget _movesLogCard({required double width}) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(blurRadius: 6, color: Colors.black12, offset: Offset(0, 2)),
+        ],
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          const Text(
+            'سجل النقلات',
+            style: TextStyle(
+              fontFamily: 'Alexandria',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: GameUiColors.darkText,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: movesHistory.isEmpty
+                ? const Center(
+                    child: Text(
+                      'لا توجد نقلات بعد',
+                      style: TextStyle(color: Colors.black38, fontSize: 12),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: movesHistory.length,
+                    itemBuilder: (context, index) =>
+                        _moveLogRow(index, movesHistory[index]),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 📝 صف واحد في سجل النقلات: من · إلى · رقم الحركة
+  Widget _moveLogRow(int index, _MoveLogEntry entry) {
+    const cellStyle = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+      color: GameUiColors.darkText,
+    );
+    final moveNumber = (index ~/ 2) + 1;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: GameUiColors.pillFill,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: (entry.from == null && entry.to == null)
+          ? Text(
+              entry.label,
+              style: cellStyle,
+              overflow: TextOverflow.ellipsis,
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(entry.from ?? '—', style: cellStyle),
+                Text(entry.to ?? '—', style: cellStyle),
+                Text('$moveNumber.', style: cellStyle),
+              ],
+            ),
+    );
+  }
+
+  /// ⏱ ساعة اللاعب على شكل حبّة (Pill) مثل الماكيت: 00:45 + أيقونة ساعة
   Widget _clockCard(int seconds) {
     final timeStr = getFormattedTime(seconds);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black26, width: 1),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: GameUiColors.pillFill, width: 1.5),
         boxShadow: const [
           BoxShadow(blurRadius: 4, color: Colors.black12, offset: Offset(0, 2)),
         ],
       ),
-      child: Text(
-        timeStr,
-        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 26),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            timeStr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 20,
+              color: GameUiColors.darkText,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(
+            Icons.access_time_filled,
+            color: Color(0xFF6B4E45),
+            size: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 👤 صورة اللاعب الدائرية (أزرق مثل الماكيت)
+  Widget _playerAvatar({double radius = 18}) {
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: GameUiColors.avatarBlue,
+      child: Icon(Icons.person, color: Colors.white, size: radius * 1.3),
+    );
+  }
+
+  /// 🏷️ اسم اللاعب + صورته
+  Widget _playerNameTag(String name, {double avatarRadius = 18}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _playerAvatar(radius: avatarRadius),
+        const SizedBox(width: 8),
+        Text(
+          name,
+          style: const TextStyle(
+            fontFamily: 'Alexandria',
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            color: GameUiColors.darkText,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 🔘 زر حبّة (Pill) للإجراءات: تلميح / تراجع / استسلام
+  Widget _actionPill({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: GameUiColors.pillFill,
+      borderRadius: BorderRadius.circular(30),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: GameUiColors.primaryPurple, size: 20),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontFamily: 'Alexandria',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: GameUiColors.darkText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// ⚙️ زر أيقونة دائري صغير (إعدادات / تدوير)
+  Widget _roundIconButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: GameUiColors.pillFill,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Tooltip(
+            message: tooltip,
+            child: Icon(icon, color: GameUiColors.primaryPurple, size: 22),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 💡↩🚩 صف أزرار الإجراءات (تلميح / تراجع / استسلام)
+  Widget _actionPillsRow() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _actionPill(
+          icon: Icons.lightbulb_outline,
+          label: 'تلميح',
+          onTap: _useHint,
+        ),
+        const SizedBox(width: 8),
+        _actionPill(
+          icon: Icons.undo,
+          label: 'تراجع',
+          onTap: _useUndo,
+        ),
+        const SizedBox(width: 8),
+        _actionPill(
+          icon: Icons.flag_outlined,
+          label: 'استسلام',
+          onTap: _resignGame,
+        ),
+      ],
+    );
+  }
+
+  /// 🚩 استسلام: تأكيد ثم إنهاء المباراة بفوز الخصم
+  void _resignGame() {
+    if (isGameOver) return;
+    showDialog(
+      context: context,
+      builder: (dialogContext) => _styledDialog(
+        title: '🚩 استسلام',
+        content: const Text('هل أنت متأكد أنك تريد الاستسلام؟'),
+        buttons: [
+          _dialogButton(
+            text: 'نعم، استسلام',
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              _confirmResign();
+            },
+          ),
+          _dialogButton(
+            text: 'إلغاء',
+            primary: false,
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmResign() {
+    if (isGameOver) return;
+    setState(() {
+      isGameOver = true;
+    });
+    moveTimer?.cancel();
+
+    // الخصم هو الفائز
+    final winnerColor = playerColor == PlayerColor.white
+        ? PlayerColor.black
+        : PlayerColor.white;
+
+    if (widget.territory != null) {
+      _showCampaignGameOverDialog(victory: false);
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _styledDialog(
+          title: '🏆 النهاية',
+          content: Text(
+            winnerColor == PlayerColor.white ? 'الأبيض ربح!' : 'الأسود ربح!',
+          ),
+          buttons: [
+            _dialogButton(
+              text: '🔄 إعادة اللعب',
+              onPressed: () {
+                Navigator.of(context).pop();
+                _resetGame();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// ⚙️ حوار الإعدادات: ثيم الرقعة + إعادة اللعب + الرئيسية
+  void _showSettingsDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => _styledDialog(
+        title: '⚙️ الإعدادات',
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                'لون الرقعة',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: GameUiColors.darkText,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 8),
+                filled: true,
+                fillColor: GameUiColors.pillFill,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              value: currentTheme,
+              items: const [
+                DropdownMenuItem(
+                    value: 'purple', child: Text('أرجواني فاتح')),
+                DropdownMenuItem(
+                    value: 'board_image', child: Text('أرجواني (صورة)')),
+                DropdownMenuItem(
+                    value: 'brown', child: Text('بني كلاسيكي')),
+                DropdownMenuItem(
+                    value: 'black_white', child: Text('أبيض / أسود')),
+                DropdownMenuItem(
+                    value: 'blue_white', child: Text('أبيض / أزرق')),
+                DropdownMenuItem(
+                    value: 'brown_modern', child: Text('بني حديث')),
+              ],
+              onChanged: (v) {
+                setState(() {
+                  currentTheme = v!;
+                });
+              },
+            ),
+          ],
+        ),
+        buttons: [
+          _dialogButton(
+            text: '🔄 إعادة اللعب',
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              _resetGame();
+            },
+          ),
+          _dialogButton(
+            text: '🏠 الرئيسية',
+            primary: false,
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Home()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -4632,4 +4870,20 @@ class _HoverDrawerItemState extends State<_HoverDrawerItem> {
       ),
     );
   }
+}
+
+/// 📝 عنصر في سجل النقلات (تصميم الماكيت: من · إلى · رقم الحركة)
+class _MoveLogEntry {
+  /// نص الحركة الكامل (مثال: ♞ C F6-F3) أو وصف خاص (دعم/ترقية)
+  final String label;
+  final String? from;
+  final String? to;
+  final bool isWhite;
+
+  const _MoveLogEntry({
+    required this.label,
+    this.from,
+    this.to,
+    required this.isWhite,
+  });
 }
