@@ -35,13 +35,13 @@ export default function ResetPasswordWrapper() {
     };
 
     return (
-        <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/Login.png')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
+        <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/login-bg.webp')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
             <div className="relative w-full max-w-[1440px] min-h-screen flex flex-col px-4 pt-6 pb-4 lg:pt-[32px] lg:pr-[48px] lg:pb-[24px] lg:pl-[48px]" dir="ltr">
 
                 <div className="relative z-10 flex flex-row items-center justify-center gap-16 lg:gap-24 w-full max-w-[1344px] mx-auto flex-1" style={{ marginTop: "24px" }}>
                     {/* Image side - desktop only */}
                     <div className="hidden lg:flex items-center justify-center shrink-0" style={{ width: "55%" }}>
-                        <img src="/assets/images/image 302.png" alt="Shatara Pieces" className="w-full max-w-[540px] h-auto object-contain" style={{ maxHeight: "430px" }} />
+                        <img src="/assets/images/auth-pieces.webp" alt="Shatara Pieces" className="w-full max-w-[540px] h-auto object-contain" style={{ maxHeight: "430px" }} />
                     </div>
 
                     {/* Form side */}
@@ -49,7 +49,7 @@ export default function ResetPasswordWrapper() {
                         className="w-full lg:w-[480px] shrink-0 flex flex-col justify-center py-6 lg:py-14 px-6 lg:px-12 rounded-3xl shadow-2xl"
                         dir="rtl"
                         style={{
-                            backgroundImage: "url('/assets/images/backhome.png')",
+                            backgroundImage: "url('/assets/images/backhome.webp')",
                             backgroundSize: "100% 100%",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
@@ -60,7 +60,7 @@ export default function ResetPasswordWrapper() {
                         </div>
 
                         <div className="w-full text-center mb-5">
-                            <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#5C4033" }}>تعيين كلمة مرور جديدة</h1>
+                            <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#6B4E45" }}>تعيين كلمة مرور جديدة</h1>
                             <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>الرجاء إدخال كلمة المرور الجديدة الخاصة بك</p>
                         </div>
 
@@ -84,14 +84,14 @@ export default function ResetPasswordWrapper() {
                             />
 
                             {message && (
-                                <p className="text-sm text-center font-bold" style={{ color: message.includes("بنجاح") ? "#4A8564" : "#D32F2F" }}>{message}</p>
+                                <p className="text-sm text-center font-bold" style={{ color: message.includes("بنجاح") ? "#06AC2A" : "#D32F2F" }}>{message}</p>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-60"
-                                style={{ backgroundColor: "#A67BC4" }}
+                                style={{ backgroundColor: "#AB86B9" }}
                             >
                                 {loading ? "جاري الحفظ..." : "تغيير كلمة المرور"}
                             </button>

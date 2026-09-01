@@ -1,6 +1,7 @@
 "use client";
 
 import { GoogleLogin } from "@react-oauth/google";
+import toast from "react-hot-toast";
 
 export default function SocialLoginButton() {
   return (
@@ -10,7 +11,7 @@ export default function SocialLoginButton() {
           const token = credentialResponse.credential;
 
           if (!token) {
-            alert("لم يتم استلام بيانات Google");
+            toast.error("لم يتم استلام بيانات Google");
             return;
           }
 
@@ -28,18 +29,18 @@ export default function SocialLoginButton() {
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
-            alert(data.message || "تم تسجيل الدخول بواسطة Google");
+            toast.success(data.message || "تم تسجيل الدخول بواسطة Google");
             window.location.href = "/";
           } else {
-            alert(data.message || "فشل تسجيل الدخول بواسطة Google");
+            toast.error(data.message || "فشل تسجيل الدخول بواسطة Google");
           }
         } catch (error) {
           console.error("GOOGLE SQL LOGIN ERROR:", error);
-          alert("حدث خطأ أثناء التسجيل باستخدام Google");
+          toast.error("حدث خطأ أثناء التسجيل باستخدام Google");
         }
       }}
       onError={() => {
-        alert("فشل تسجيل الدخول بواسطة Google");
+        toast.error("فشل تسجيل الدخول بواسطة Google");
       }}
     />
   );

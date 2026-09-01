@@ -43,8 +43,8 @@ export function StatsSection() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div className="relative w-full h-[600px] max-w-7xl opacity-90">
           <Image
-            src="/assets/images/stat.png"
-            alt="World Map"
+            src="/assets/images/stat.webp"
+            alt=""
             fill
             className="object-cover md:object-contain object-center"
           />
@@ -56,7 +56,7 @@ export function StatsSection() {
 
           {/* Text Content */}
           <div className="md:w-auto text-right">
-            <h2 className="text-3xl md:text-[40px] font-bold text-[#644B48] leading-snug">
+            <h2 className="text-3xl md:text-[40px] font-bold text-[#6B4E45] leading-snug">
               أرقامنا هي من تتحدث عنا
             </h2>
           </div>
@@ -69,7 +69,7 @@ export function StatsSection() {
               return (
                 <div key={stat.label} className="flex items-center gap-3">
                   {/* Icon Container (Right in RTL) */}
-                  <div className="relative text-[#644B48]">
+                  <div className="relative text-[#6B4E45]">
                     <Icon className="w-8 h-8 md:w-10 md:h-10" />
                     {stat.isOnline && (
                       <span className="absolute -bottom-0.5 -left-0.5 w-3 h-3 bg-[#06AC2A] border-2 border-white rounded-full"></span>
@@ -81,7 +81,7 @@ export function StatsSection() {
                     {loading ? (
                       <Skeleton className="h-8 md:h-10 w-16 mb-2" />
                     ) : (
-                      <span className="text-3xl md:text-[38px] font-bold text-[#644B48] leading-none">
+                      <span className="text-3xl md:text-[38px] font-bold text-[#6B4E45] leading-none">
                         {stat.value.toLocaleString('ar-SA')}
                       </span>
                     )}

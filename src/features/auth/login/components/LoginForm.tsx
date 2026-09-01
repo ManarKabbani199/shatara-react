@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginInput from "./LoginInput";
 import SocialLoginButton from "./SocialLoginButton";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
@@ -15,18 +16,24 @@ export default function LoginForm() {
         e.preventDefault();
 
         if (!username.trim() || !password.trim()) {
-            alert("يرجى إدخال اسم المستخدم وكلمة المرور");
+            toast.error("يرجى إدخال اسم المستخدم وكلمة المرور");
             return;
         }
 
         setLoading(true);
 
         try {
-            const params = new URLSearchParams({
-                username: username.trim(),
-                password: password.trim(),
+            const response = await fetch("https://shatara.sa/chess_api/login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Accept: "application/json",
+                },
+                body: new URLSearchParams({
+                    username: username.trim(),
+                    password: password.trim(),
+                }).toString(),
             });
-            const response = await fetch(`https://shatara.sa/chess_api/login.php?${params.toString()}`);
 
             const data = await response.json();
 
@@ -34,14 +41,14 @@ export default function LoginForm() {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
-                alert("تم تسجيل الدخول بنجاح");
+                toast.success("تم تسجيل الدخول بنجاح");
                 window.location.href = "/";
             } else {
-                alert(data.message || "فشل تسجيل الدخول");
+                toast.error(data.message || "فشل تسجيل الدخول");
             }
         } catch (error) {
             console.error("LOGIN ERROR:", error);
-            alert("حدث خطأ في الاتصال بالسيرفر");
+            toast.error("حدث خطأ في الاتصال بالسيرفر");
         } finally {
             setLoading(false);
         }
@@ -61,7 +68,7 @@ export default function LoginForm() {
             </div>
 
             <div className="w-full hidden lg:block text-center mb-5">
-                <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#5C4033" }}>
+                <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#6B4E45" }}>
                     عضو في شطارة!
                 </h1>
                 <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>
@@ -90,21 +97,11 @@ export default function LoginForm() {
                     required
                 />
 
-                <div className="w-full lg:hidden flex items-center justify-between mt-1">
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                        <input
-                            type="checkbox"
-                            className="w-4 h-4 rounded border-2 border-[#8C7467] cursor-pointer accent-[#A67BC4]"
-                        />
-                        <span className="text-xs text-[#6B4E45] group-hover:text-[#5C4033] transition-colors">
-                            تذكرني
-                        </span>
-                    </label>
-
+                <div className="w-full lg:hidden flex items-center justify-end mt-1">
                     <Link
                         href="/forgot-password"
                         className="text-xs hover:underline transition-colors"
-                        style={{ color: "#A67BC4" }}
+                        style={{ color: "#AB86B9" }}
                     >
                         نسيت كلمة المرور؟
                     </Link>
@@ -114,7 +111,7 @@ export default function LoginForm() {
                     <Link
                         href="/forgot-password"
                         className="text-xs hover:underline transition-colors"
-                        style={{ color: "#A67BC4" }}
+                        style={{ color: "#AB86B9" }}
                     >
                         نسيت كلمة المرور؟
                     </Link>
@@ -124,7 +121,7 @@ export default function LoginForm() {
                     type="submit"
                     disabled={loading}
                     className="w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-60"
-                    style={{ backgroundColor: "#A67BC4" }}
+                    style={{ backgroundColor: "#AB86B9" }}
                 >
                     {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
                 </button>

@@ -17,7 +17,7 @@ export function HeroSection() {
         <video
           ref={videoRef}
           className="w-full aspect-[4/3] sm:aspect-video object-cover"
-          poster="/assets/images/hero.png"
+          poster="/assets/images/hero.webp"
           autoPlay
           muted
           loop

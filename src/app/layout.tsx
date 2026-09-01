@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from 'next';
+import { Alexandria } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { SITE } from '@/config/constants';
 import { JsonLd } from '@/components/layout/json-ld';
 import GoogleProvider from '@/components/providers/GoogleProvider';
+
+const alexandria = Alexandria({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -56,15 +63,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={alexandria.className}>
       <head>
         <link rel="canonical" href={SITE.url} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
 
       <body className="min-h-screen flex flex-col font-alexandria">

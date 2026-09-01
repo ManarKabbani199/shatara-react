@@ -2,10 +2,10 @@ import Image from 'next/image';
 import { URLS } from '@/config/constants';
 
 const STORE_IMAGES = [
-  { src: '/assets/images/st1.png', alt: 'منتج شطارة 1' },
-  { src: '/assets/images/st2.png', alt: 'منتج شطارة 2' },
-  { src: '/assets/images/st3.png', alt: 'منتج شطارة 3' },
-  { src: '/assets/images/st4.png', alt: 'منتج شطارة 4' },
+  { src: '/assets/images/st1.webp', alt: 'منتج شطارة 1' },
+  { src: '/assets/images/st2.webp', alt: 'منتج شطارة 2' },
+  { src: '/assets/images/st3.webp', alt: 'منتج شطارة 3' },
+  { src: '/assets/images/st4.webp', alt: 'منتج شطارة 4' },
 ];
 
 export function StoreSection() {

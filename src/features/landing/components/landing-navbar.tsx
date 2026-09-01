@@ -30,6 +30,16 @@ export function LandingNavbar() {
     };
   }, [mobileOpen]);
 
+  /* Close drawer on Escape key */
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMobile();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileOpen, closeMobile]);
+
   return (
     <>
       <header
@@ -146,8 +156,11 @@ export function LandingNavbar() {
             onClick={closeMobile}
           />
           <div
-            className="fixed inset-y-0 end-0 w-64 bg-white shadow-2xl z-50"
+            className="fixed inset-y-0 end-0 w-64 bg-white shadow-2xl z-50 animate-drawer-in"
             dir="rtl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="قائمة التنقل"
           >
             <div className="flex items-center justify-between p-3 border-b border-brand-brown/10">
               <Image

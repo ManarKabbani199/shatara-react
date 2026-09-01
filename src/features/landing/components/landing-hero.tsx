@@ -9,15 +9,15 @@ export function LandingHero() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center space-y-6 anim-fade-up">
           {/* Saudi Patent Badge */}
-          <div className="inline-flex items-center px-2 py-1 bg-white text-[#4A8564] border border-[#4A8564] shadow-sm">
+          <div className="inline-flex items-center px-2 py-1 bg-white text-[#06AC2A] border border-[#06AC2A] shadow-sm">
             <span className="text-[13px] font-bold">براءة اختراع سعودية</span>
-            <div className="mr-2 w-5 h-4 bg-[#4A8564] flex items-center justify-center">
+            <div className="mr-2 w-5 h-4 bg-[#06AC2A] flex items-center justify-center">
               <span className="text-[8px] text-white font-bold">SA</span>
             </div>
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl md:text-[52px] font-bold text-[#644B48] leading-[1.2] max-w-5xl mx-auto tracking-tight">
+          <h1 className="text-4xl md:text-[52px] font-bold text-[#6B4E45] leading-[1.2] max-w-5xl mx-auto tracking-tight">
             المعركة بدأت، وجيشك بانتظار أوامرك
           </h1>
 
@@ -66,7 +66,7 @@ export function LandingHero() {
 
         <div className="relative w-full h-full">
           <Image
-            src="/assets/images/looog.png"
+            src="/assets/images/looog.webp"
             alt="شطارة"
             fill
             className="object-contain object-center"

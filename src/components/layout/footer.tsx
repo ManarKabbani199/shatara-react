@@ -13,7 +13,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs font-bold text-brand-brown">
-            © 2025 شطارة. جميع الحقوق محفوظة
+            © {new Date().getFullYear()} شطارة. جميع الحقوق محفوظة
           </p>
 
           <div className="flex items-center gap-5">

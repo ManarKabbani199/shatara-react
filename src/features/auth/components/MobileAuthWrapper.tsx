@@ -19,7 +19,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
             : "مرحبًا بك!، يمكنك الإنضمام إلينا عن طريق إنشاء حساب جديد";
 
     return (
-        <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/Login.png')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
+        <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/login-bg.webp')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
 
             <div
                 className="relative w-full max-w-[1440px] min-h-screen flex flex-col px-4 pt-6 pb-4 lg:pt-[32px] lg:pr-[48px] lg:pb-[24px] lg:pl-[48px]"
@@ -35,7 +35,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                     {/* Shatara pieces image — desktop only */}
                     <div className="hidden lg:flex items-center justify-center shrink-0" style={{ width: "55%" }}>
                         <img
-                            src="/assets/images/image 302.png"
+                            src="/assets/images/auth-pieces.webp"
                             alt="Shatara Pieces"
                             className="w-full max-w-[540px] h-auto object-contain"
                             style={{ maxHeight: "430px" }}
@@ -46,7 +46,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                     <div
                         className={`hidden lg:flex ${defaultTab === "login" ? "py-14" : "py-10"} w-[390px] shrink-0 flex-col justify-center rounded-3xl shadow-2xl`}
                         style={{
-                            backgroundImage: "url('/assets/images/backhome.png')",
+                            backgroundImage: "url('/assets/images/backhome.webp')",
                             backgroundSize: "100% 100%",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
@@ -73,7 +73,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                             />
                             <h1
                                 className="text-[20px] font-bold mb-1.5 text-center leading-snug"
-                                style={{ color: "#5C4033" }}
+                                style={{ color: "#6B4E45" }}
                             >
                                 {activeTab === "login" ? "مرحبًا بعودتك!" : "عضو جديد في شطارة!"}
                             </h1>
@@ -95,8 +95,8 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                                 type="button"
                                 onClick={() => setActiveTab("login")}
                                 className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "login"
-                                        ? "bg-[#A67BC4] text-white shadow-sm"
-                                        : "text-[#8C7467] hover:text-[#5C4033]"
+                                        ? "bg-[#AB86B9] text-white shadow-sm"
+                                        : "text-[#8C7467] hover:text-[#6B4E45]"
                                     }`}
                             >
                                 تسجيل الدخول
@@ -106,8 +106,8 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
                                 type="button"
                                 onClick={() => setActiveTab("register")}
                                 className={`flex-1 py-2.5 text-center text-sm font-bold rounded-xl transition-all duration-200 ${activeTab === "register"
-                                        ? "bg-[#A67BC4] text-white shadow-sm"
-                                        : "text-[#8C7467] hover:text-[#5C4033]"
+                                        ? "bg-[#AB86B9] text-white shadow-sm"
+                                        : "text-[#8C7467] hover:text-[#6B4E45]"
                                     }`}
                             >
                                 إنشاء حساب
@@ -141,7 +141,7 @@ export default function MobileAuthWrapper({ defaultTab }: MobileAuthWrapperProps
 
                     {/* Copyright column — aligns with form card */}
                     <div className="w-full lg:w-[390px] shrink-0 flex justify-center lg:justify-end text-center lg:text-right">
-                        <div>ميدان شطارة. جميع الحقوق محفوظة © 2026</div>
+                        <div>شطارة. جميع الحقوق محفوظة © {new Date().getFullYear()}</div>
                     </div>
                 </footer>
 

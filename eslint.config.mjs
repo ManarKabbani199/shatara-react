@@ -19,6 +19,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Non-Next.js projects/assets living in this repo:
+    "Chess_Kings/**",
+    "salla-import/**",
+    "map-test/**",
+    "uiux/**",
+    "public/**",
   ]),
 ]);
 

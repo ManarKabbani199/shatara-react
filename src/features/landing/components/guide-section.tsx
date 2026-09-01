@@ -1,15 +1,19 @@
 'use client';
 
-import { HiDownload } from 'react-icons/hi';
+import { useState } from 'react';
+import { HiDownload, HiBookOpen } from 'react-icons/hi';
 import { URLS } from '@/config/constants';
 
 export function GuideSection() {
+  const [showViewer, setShowViewer] = useState(false);
+
   return (
     <section
+      id="guide"
       className="relative min-h-[600px] sm:min-h-[700px] bg-black bg-cover bg-center bg-no-repeat overflow-hidden flex items-center justify-center p-4 sm:p-8 lg:p-12"
       dir="rtl"
       style={{
-        backgroundImage: "url('/assets/images/19 1.png')",
+        backgroundImage: "url('/assets/images/guide-bg.webp')",
       }}
     >
       <div className="relative w-full max-w-6xl">
@@ -29,14 +33,30 @@ export function GuideSection() {
             </a>
           </div>
 
-          {/* Full PDF viewer */}
+          {/* PDF viewer — loaded only on demand to keep the page light */}
           <div className="rounded-b-3xl overflow-hidden border border-[#E8E4DE] bg-[#F5F3F0]">
-            <iframe
-              src={URLS.guide}
-              title="دليل شطارة الكامل"
-              className="w-full h-[70vh] sm:h-[75vh] min-h-[500px]"
-              loading="lazy"
-            />
+            {showViewer ? (
+              <iframe
+                src={URLS.guide}
+                title="دليل شطارة الكامل"
+                className="w-full h-[70vh] sm:h-[75vh] min-h-[500px]"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-[40vh] min-h-[300px] flex flex-col items-center justify-center gap-5 px-6 text-center">
+                <HiBookOpen className="w-14 h-14 text-[#6B4E45]" aria-hidden="true" />
+                <p className="text-[#6B4E45] text-base sm:text-lg font-bold max-w-md">
+                  تصفح دليل شطارة الكامل وتعلّم قواعد اللعبة خطوة بخطوة
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowViewer(true)}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#6B4E45] hover:bg-[#5a423a] text-white text-sm sm:text-base font-bold rounded-xl transition-colors shadow-lg"
+                >
+                  تصفح الدليل
+                </button>
+              </div>
+            )}
             <p className="text-center text-xs sm:text-sm text-[#6B7280] py-3 px-4 bg-white">
               إذا لم يظهر الملف أعلاه، يمكنك{' '}
               <a

@@ -41,7 +41,8 @@ export default function LoginInput({
                 {...props}
                 type={inputType}
                 placeholder={placeholder}
-                className="flex-1 h-full bg-transparent text-sm text-[#5C4033] placeholder-[#8C7467]/70 outline-none text-right px-2 font-medium"
+                aria-label={placeholder}
+                className="flex-1 h-full bg-transparent text-sm text-[#6B4E45] placeholder-[#8C7467]/70 outline-none text-right px-2 font-medium"
             />
 
             {/* LEFT: eye toggle (password only) */}
@@ -49,7 +50,7 @@ export default function LoginInput({
                 <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="flex items-center justify-center w-10 h-full shrink-0 text-[#8C7467] hover:text-[#5C4033] transition-colors"
+                    className="flex items-center justify-center w-10 h-full shrink-0 text-[#8C7467] hover:text-[#6B4E45] transition-colors"
                     aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
                 >
                     {showPassword

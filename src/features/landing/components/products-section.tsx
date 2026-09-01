@@ -23,7 +23,7 @@ const products: Product[] = [
     originalPrice: 349.99,
     price: 249.99,
     discount: 30,
-    image: '/assets/images/product-sha-26-004-s2.png',
+    image: '/assets/images/product-sha-26-004-s2.webp',
     link: 'https://store.shatara.sa',
   },
   {
@@ -69,7 +69,7 @@ export function ProductsSection() {
   };
 
   return (
-    <section className="py-[80px] bg-white" dir="rtl">
+    <section id="products" className="py-[80px] bg-white" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Top row: heading right, cards left */}
@@ -119,7 +119,7 @@ export function ProductsSection() {
                   <div className="relative rounded-[18px] overflow-hidden bg-white border border-[#E8E4DE] cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-[270px] sm:h-[290px]">
 
                     {product.discount > 0 && (
-                      <div className="absolute top-3 right-3 z-10 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md">
+                      <div className="absolute top-3 right-3 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-md">
                         %{product.discount} خصم
                       </div>
                     )}
@@ -147,13 +147,13 @@ export function ProductsSection() {
                         {product.name}
                       </h3>
                       <div className="flex items-center justify-between gap-1 flex-row-reverse mt-1">
-                        <span className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-[#AB86B9] text-white text-[9.5px] font-bold rounded-lg shadow-sm shrink-0">
-                          <HiShoppingCart className="w-3 h-3" />
-                          <span>أضف للسلة</span>
+                        <span className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-[#AB86B9] text-white text-xs font-bold rounded-lg shadow-sm shrink-0">
+                          <HiShoppingCart className="w-3.5 h-3.5" />
+                          <span>تسوق الآن</span>
                         </span>
 
                         <div className="flex flex-col text-right justify-center">
-                          <span className="text-gray-400 text-[8.5px] font-bold line-through leading-tight">
+                          <span className="text-gray-400 text-xs font-bold line-through leading-tight">
                             {product.originalPrice.toFixed(2)} ر.س
                           </span>
                           <span className="text-[#6B4E45] text-[12px] font-extrabold leading-none mt-0.5">
@@ -178,7 +178,7 @@ export function ProductsSection() {
             aria-label="السابق"
             disabled={!canScrollPrev}
             className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${canScrollPrev
-              ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
+              ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#AB86B9]/90'
               : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
           >
@@ -189,7 +189,7 @@ export function ProductsSection() {
             aria-label="التالي"
             disabled={!canScrollNext}
             className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-all ${canScrollNext
-              ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#9a73a8]'
+              ? 'bg-[#AB86B9] text-white shadow-md hover:bg-[#AB86B9]/90'
               : 'bg-gray-100 text-gray-300 cursor-not-allowed'
               }`}
           >

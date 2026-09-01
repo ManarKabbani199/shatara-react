@@ -123,7 +123,7 @@ export function VideoPopup() {
             muted
             playsInline
             loop={false}
-            preload="metadata"
+            preload="none"
             className="video-popup-video"
           />
         </div>

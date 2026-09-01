@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginInput from "../../login/components/LoginInput";
 import SocialLoginButton from "../../login/components/SocialLoginButton";
+import toast from "react-hot-toast";
 
 export default function RegisterForm() {
     const [name, setName] = useState("");
@@ -19,12 +20,12 @@ export default function RegisterForm() {
         e.preventDefault();
 
         if (!name.trim() || !username.trim() || !email.trim() || !password.trim()) {
-            alert("يرجى تعبئة جميع الحقول المطلوبة");
+            toast.error("يرجى تعبئة جميع الحقول المطلوبة");
             return;
         }
 
         if (password.length < 6) {
-            alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+            toast.error("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
             return;
         }
 
@@ -52,14 +53,14 @@ export default function RegisterForm() {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
-                alert("تم إنشاء الحساب بنجاح");
+                toast.success("تم إنشاء الحساب بنجاح");
                 window.location.href = "/";
             } else {
-                alert(data.message || "فشل إنشاء الحساب");
+                toast.error(data.message || "فشل إنشاء الحساب");
             }
         } catch (error) {
             console.error("REGISTER ERROR:", error);
-            alert("حدث خطأ في الاتصال بالسيرفر");
+            toast.error("حدث خطأ في الاتصال بالسيرفر");
         } finally {
             setLoading(false);
         }
@@ -79,7 +80,7 @@ export default function RegisterForm() {
             </div>
 
             <div className="w-full hidden lg:block text-center mb-5">
-                <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#5C4033" }}>
+                <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#6B4E45" }}>
                     عضو جديد في شطارة!
                 </h1>
                 <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>
@@ -140,7 +141,8 @@ export default function RegisterForm() {
                 <select
                     value={level}
                     onChange={(e) => setLevel(e.target.value)}
-                    className="w-full h-11 rounded-xl border border-[#E5D7CE] bg-white/70 backdrop-blur-sm px-3 text-sm outline-none text-right text-[#5C4033]"
+                    aria-label="مستوى اللعب"
+                    className="w-full h-11 rounded-xl border border-[#E5D7CE] bg-white/70 backdrop-blur-sm px-3 text-sm outline-none text-right text-[#6B4E45]"
                     style={{ color: "#6B4E45" }}
                 >
                     <option value="مبتدئ">مبتدئ</option>
@@ -152,7 +154,7 @@ export default function RegisterForm() {
                     type="submit"
                     disabled={loading}
                     className="w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-60"
-                    style={{ backgroundColor: "#A67BC4" }}
+                    style={{ backgroundColor: "#AB86B9" }}
                 >
                     {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
                 </button>

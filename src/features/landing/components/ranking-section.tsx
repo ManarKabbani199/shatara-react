@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { resolvePhotoUrl } from '@/lib/api-utils';
 import { cn } from '@/lib/utils';
 
-const BRAND_BROWN = '#644B48';
+const BRAND_BROWN = '#6B4E45';
 
 function rankGradient(rank: number): string {
   if (rank === 1) return 'from-yellow-400 to-yellow-600';
@@ -47,7 +47,7 @@ export function RankingSection() {
           <button
             onClick={refetch}
             disabled={isLoading}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-[#644B48] transition-colors disabled:opacity-50 disabled:cursor-not-allowed self-start md:self-auto"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-[#6B4E45] transition-colors disabled:opacity-50 disabled:cursor-not-allowed self-start md:self-auto"
             aria-label="تحديث قائمة المتصدرين"
           >
             <HiRefresh className={cn('w-5 h-5', isLoading && 'animate-spin')} />
@@ -118,7 +118,7 @@ export function RankingSection() {
 
                   {/* Info */}
                   <div className="flex-1 min-w-0 text-right">
-                    <p className="font-bold text-[#644B48] truncate">{player.name}</p>
+                    <p className="font-bold text-[#6B4E45] truncate">{player.name}</p>
                     <p className="text-sm text-gray-500 font-medium">
                       {wins === 1 ? 'فوز واحد' : `${wins} فوز`}
                     </p>
