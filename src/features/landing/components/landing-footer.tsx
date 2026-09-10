@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { SITE, CONTACT, URLS } from '@/config/constants';
+import { SITE, CONTACT, URLS, SOCIALS } from '@/config/constants';
+import { FaLinkedin, FaXTwitter, FaInstagram, FaYoutube, FaFacebook } from 'react-icons/fa6';
 
 const footerLinks = {
   pages: [
@@ -11,9 +12,20 @@ const footerLinks = {
     { name: 'إلعب الآن', href: 'https://shatara.sa/play/', external: true },
     { name: 'المنتجات', href: '#products' },
   ],
-  // Social accounts are hidden until the real profile URLs are available.
-  socials: [] as { icon: unknown; href: string; label: string }[],
 };
+
+// Social icons render only for profiles with a real URL in SOCIALS (config).
+const socials = (
+  [
+    { key: 'linkedin', icon: FaLinkedin, label: 'LinkedIn' },
+    { key: 'twitter', icon: FaXTwitter, label: 'X' },
+    { key: 'facebook', icon: FaFacebook, label: 'Facebook' },
+    { key: 'instagram', icon: FaInstagram, label: 'Instagram' },
+    { key: 'youtube', icon: FaYoutube, label: 'YouTube' },
+  ] as const
+)
+  .filter(({ key }) => SOCIALS[key].length > 0)
+  .map(({ key, icon, label }) => ({ icon, label, href: SOCIALS[key] }));
 
 export function LandingFooter() {
   return (
@@ -84,6 +96,25 @@ export function LandingFooter() {
                   مركز المساعدة و الدعم
                 </a>
               </div>
+              {socials.length > 0 && (
+                <div className="pt-6 space-y-3">
+                  <h4 className="text-sm font-bold text-gray-800">حسابات شطارة</h4>
+                  <div className="flex items-center justify-center md:justify-start gap-1.5">
+                    {socials.map((social) => (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label}
+                        className="w-8 h-8 rounded bg-[#AB86B9] text-white flex items-center justify-center hover:bg-[#AB86B9]/90 transition-all"
+                      >
+                        <social.icon className="w-4 h-4" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

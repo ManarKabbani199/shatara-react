@@ -22,6 +22,22 @@ export const CONTACT = {
   phone: '+966 54 892 9642',
 } as const;
 
+// Official social profile URLs. An empty string means the icon stays hidden
+// in the footer — paste the real URL here to activate it.
+export const SOCIALS = {
+  twitter: '', // X (Twitter)
+  instagram: '',
+  facebook: '',
+  youtube: '',
+  linkedin: '',
+} as const;
+
+// Feature flags for sections pending external decisions.
+export const FEATURES = {
+  // Newsletter form stays hidden until a mailing service (e.g. Mailchimp) is chosen.
+  newsletter: false,
+} as const;
+
 export const COUNTRIES_AR = [
   'السعودية',
   'الكويت',
