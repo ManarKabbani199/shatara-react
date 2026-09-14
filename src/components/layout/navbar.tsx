@@ -48,7 +48,16 @@ export function Navbar() {
               />
             </Link>
 
-            <NavLink label="إلعب الآن" icon={<NavIcon src="/assets/images/chese.jpeg" alt="إلعب الآن" />} href="https://shatara.sa/play/" external />
+           <NavLink
+  label={openingPlay ? 'جاري فتح اللعبة...' : 'إلعب الآن'}
+  icon={
+    <NavIcon
+      src="/assets/images/chese.jpeg"
+      alt="إلعب الآن"
+    />
+  }
+  onClick={handlePlayClick}
+/>
             <NavLink label="متجر شطارة" icon={<NavIcon src="/assets/images/store.jpeg" alt="متجر شطارة" />} href={URLS.store} external />
             <NavLink label="نادي شطارة" icon={<NavIcon src="/assets/images/commuinty.jpeg" alt="نادي شطارة" />} href={URLS.club} external />
             <NavLink label="دليل شطارة" icon={<NavIcon src="/assets/images/book.jpeg" alt="دليل شطارة" />} href={URLS.guide} external />
@@ -129,7 +138,19 @@ export function Navbar() {
             </div>
 
             <div className="flex flex-col p-4 gap-1 overflow-y-auto">
-              <DrawerLink label="إلعب الآن" icon={<NavIcon src="/assets/images/chese.jpeg" alt="إلعب الآن" />} href="https://shatara.sa/play/" onClick={closeMobile} />
+              <DrawerLink
+  label={openingPlay ? 'جاري فتح اللعبة...' : 'إلعب الآن'}
+  icon={
+    <NavIcon
+      src="/assets/images/chese.jpeg"
+      alt="إلعب الآن"
+    />
+  }
+  onClick={() => {
+    closeMobile();
+    void handlePlayClick();
+  }}
+/>
               <DrawerLink label="متجر شطارة" icon={<NavIcon src="/assets/images/store.jpeg" alt="متجر شطارة" />} href={URLS.store} onClick={closeMobile} />
               <DrawerLink label="نادي شطارة" icon={<NavIcon src="/assets/images/commuinty.jpeg" alt="نادي شطارة" />} href={URLS.club} onClick={closeMobile} />
               <DrawerLink label="دليل شطارة" icon={<NavIcon src="/assets/images/book.jpeg" alt="دليل شطارة" />} href={URLS.guide} onClick={closeMobile} />

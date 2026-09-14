@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const response = await fetch('https://shatara.sa/shatara_api/visitor.php', {
+    const response = await fetch('https://api.shatara.sa/visitor.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

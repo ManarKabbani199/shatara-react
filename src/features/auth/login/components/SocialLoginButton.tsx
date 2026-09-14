@@ -35,7 +35,7 @@ export default function SocialLoginButton() {
           }
 
           try {
-            const response = await fetch("https://shatara.sa/chess_api/google_login.php", {
+            const response = await fetch("https://api.shatara.sa/google_login.php", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

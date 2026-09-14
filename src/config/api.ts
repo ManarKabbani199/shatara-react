@@ -1,6 +1,6 @@
 export const API_BASE = {
   origin: 'https://shatara.sa',
-  chess: 'https://shatara.sa/chess_api',
+  chess: 'https://api.shatara.sa',
   shataraGame: 'https://shatara.sa/ShataraGame',
 } as const;
 

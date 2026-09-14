@@ -51,7 +51,7 @@ export function JoinGuideSection() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://shatara.sa/shatara_api/register.php', {
+      const response = await fetch('https://api.shatara.sa/register.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
