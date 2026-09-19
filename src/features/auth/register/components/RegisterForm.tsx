@@ -3,11 +3,23 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 import LoginInput from "../../login/components/LoginInput";
 import SocialLoginButton from "../../login/components/SocialLoginButton";
 import toast from "react-hot-toast";
+import { isGoogleLoginEnabled } from "@/config/constants";
+import { notifyAuthChanged } from "@/features/auth/hooks/use-auth";
+
+const registerSchema = z.object({
+    name: z.string().trim().min(1, "يرجى إدخال الاسم الكامل"),
+    username: z.string().trim().min(1, "يرجى إدخال اسم المستخدم"),
+    email: z.email("يرجى إدخال بريد إلكتروني صحيح"),
+    password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
+});
 
 export default function RegisterForm() {
+    const router = useRouter();
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -19,13 +31,9 @@ export default function RegisterForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!name.trim() || !username.trim() || !email.trim() || !password.trim()) {
-            toast.error("يرجى تعبئة جميع الحقول المطلوبة");
-            return;
-        }
-
-        if (password.length < 6) {
-            toast.error("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+        const parsed = registerSchema.safeParse({ name, username, email, password });
+        if (!parsed.success) {
+            toast.error(parsed.error.issues[0]?.message ?? "يرجى مراجعة الحقول المدخلة");
             return;
         }
 
@@ -54,7 +62,8 @@ export default function RegisterForm() {
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
                 toast.success("تم إنشاء الحساب بنجاح");
-                window.location.href = "/";
+                notifyAuthChanged();
+                router.push("/");
             } else {
                 toast.error(data.message || "فشل إنشاء الحساب");
             }
@@ -160,15 +169,19 @@ export default function RegisterForm() {
                 </button>
             </form>
 
-            <div className="flex items-center w-full my-4 gap-3">
-                <div className="flex-1 h-px bg-gray-300" />
-                <span className="text-xs text-gray-400 whitespace-nowrap">أو عن طريق</span>
-                <div className="flex-1 h-px bg-gray-300" />
-            </div>
+            {isGoogleLoginEnabled && (
+                <>
+                    <div className="flex items-center w-full my-4 gap-3">
+                        <div className="flex-1 h-px bg-gray-300" />
+                        <span className="text-xs text-gray-400 whitespace-nowrap">أو عن طريق</span>
+                        <div className="flex-1 h-px bg-gray-300" />
+                    </div>
 
-            <div className="w-full" dir="ltr">
-                <SocialLoginButton />
-            </div>
+                    <div className="w-full" dir="ltr">
+                        <SocialLoginButton />
+                    </div>
+                </>
+            )}
 
             <p className="w-full mt-4 text-[13px] text-[#6B4E45] font-medium text-center">
                 لديك حساب؟{" "}

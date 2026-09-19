@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CHESS_API_ENDPOINTS } from "@/config/api";
 
 export type SqlUser = {
@@ -22,24 +23,36 @@ export type SqlUser = {
   ShataID?: string;
 };
 
+/** Fired on window after login/logout mutates localStorage, so mounted
+ *  components (e.g. the navbar) refresh their auth state without a reload. */
+export const AUTH_CHANGED_EVENT = "shatara-auth-changed";
+
+export function notifyAuthChanged() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
+  }
+}
+
 export function useAuth() {
+  const router = useRouter();
   const [user, setUser] = useState<SqlUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem("user");
-
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      } else {
+    const load = () => {
+      try {
+        const savedUser = localStorage.getItem("user");
+        setUser(savedUser ? (JSON.parse(savedUser) as SqlUser) : null);
+      } catch {
         setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    } catch {
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    load();
+    window.addEventListener(AUTH_CHANGED_EVENT, load);
+    return () => window.removeEventListener(AUTH_CHANGED_EVENT, load);
   }, []);
 
   const logout = async () => {
@@ -64,7 +77,8 @@ export function useAuth() {
       localStorage.removeItem("user");
       localStorage.removeItem("uid");
       setUser(null);
-      window.location.href = "/login";
+      notifyAuthChanged();
+      router.push("/login");
     }
   };
 

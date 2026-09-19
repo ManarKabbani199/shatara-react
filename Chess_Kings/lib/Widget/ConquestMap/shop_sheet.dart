@@ -24,9 +24,8 @@ class ShopPrices {
 
 /// Board themes sold in the shop (keys must exist in BoardThemes.themes).
 const Map<String, String> kShopThemeNames = {
-  'brown': 'بني كلاسيكي',
-  'blackWhite': 'أبيض وأسود',
-  'blueWhite': 'أزرق ملكي',
+  'black_white': 'أبيض وأسود',
+  'blue_white': 'أزرق ملكي',
 };
 
 /// Conquest shop bottom sheet: power-ups, boosters, board themes, and

@@ -22,8 +22,19 @@ export const CONTACT = {
   phone: '+966 54 892 9642',
 } as const;
 
+// Google OAuth client id (public). Set NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local
+// to enable Google sign-in; when empty the Google button stays hidden.
+export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
+export const isGoogleLoginEnabled = GOOGLE_CLIENT_ID.length > 0;
+
 // Official social profile URLs. An empty string means the icon stays hidden
 // in the footer — paste the real URL here to activate it.
+// TODO: fill with the official accounts, full URL format, e.g.:
+//   twitter:   'https://x.com/<handle>'
+//   instagram: 'https://instagram.com/<handle>'
+//   facebook:  'https://facebook.com/<page>'
+//   youtube:   'https://youtube.com/@<channel>'
+//   linkedin:  'https://linkedin.com/company/<slug>'
 export const SOCIALS = {
   twitter: '', // X (Twitter)
   instagram: '',

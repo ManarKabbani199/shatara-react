@@ -1,38 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import LoginInput from "@/features/auth/login/components/LoginInput";
+import { CONTACT } from "@/config/constants";
 
 export default function ResetPasswordWrapper() {
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (password.length < 6) {
-            setMessage("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
-            return;
-        }
-        if (password !== confirmPassword) {
-            setMessage("كلمتا المرور غير متطابقتين");
-            return;
-        }
-
-        setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setMessage("تم تغيير كلمة المرور بنجاح.");
-            setLoading(false);
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 1500);
-        }, 1000);
-    };
 
     return (
         <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/login-bg.webp')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
@@ -61,41 +34,14 @@ export default function ResetPasswordWrapper() {
 
                         <div className="w-full text-center mb-5">
                             <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#6B4E45" }}>تعيين كلمة مرور جديدة</h1>
-                            <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>الرجاء إدخال كلمة المرور الجديدة الخاصة بك</p>
+                            <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>
+                                خدمة إعادة تعيين كلمة المرور غير متاحة حالياً.
+                                للمساعدة، تواصل معنا على{" "}
+                                <a href={`mailto:${CONTACT.email}`} className="font-bold hover:underline" style={{ color: "#AB86B9" }}>
+                                    {CONTACT.email}
+                                </a>
+                            </p>
                         </div>
-
-                        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3" noValidate>
-                            <LoginInput
-                                icon="password"
-                                type="password"
-                                placeholder="كلمة المرور الجديدة"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-
-                            <LoginInput
-                                icon="password"
-                                type="password"
-                                placeholder="تأكيد كلمة المرور"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-
-                            {message && (
-                                <p className="text-sm text-center font-bold" style={{ color: message.includes("بنجاح") ? "#06AC2A" : "#D32F2F" }}>{message}</p>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-60"
-                                style={{ backgroundColor: "#AB86B9" }}
-                            >
-                                {loading ? "جاري الحفظ..." : "تغيير كلمة المرور"}
-                            </button>
-                        </form>
 
                         <div className="w-full mt-6 text-center">
                             <Link href="/login" className="text-sm font-bold hover:underline" style={{ color: "#6B4E45" }}>العودة لتسجيل الدخول</Link>

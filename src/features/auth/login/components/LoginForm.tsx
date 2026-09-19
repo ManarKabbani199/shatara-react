@@ -3,11 +3,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LoginInput from "./LoginInput";
 import SocialLoginButton from "./SocialLoginButton";
 import toast from "react-hot-toast";
+import { PROXY_PATHS } from "@/config/api";
+import { isGoogleLoginEnabled } from "@/config/constants";
+import { notifyAuthChanged } from "@/features/auth/hooks/use-auth";
 
 export default function LoginForm() {
+    const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -23,16 +28,16 @@ export default function LoginForm() {
         setLoading(true);
 
         try {
-            const response = await fetch("https://shatara.sa/chess_api/login.php", {
+            const response = await fetch(PROXY_PATHS.login, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     username: username.trim(),
                     password: password.trim(),
-                }).toString(),
+                }),
             });
 
             const data = await response.json();
@@ -42,7 +47,8 @@ export default function LoginForm() {
                 localStorage.setItem("uid", String(data.user.uid ?? data.user.id));
 
                 toast.success("تم تسجيل الدخول بنجاح");
-                window.location.href = "/";
+                notifyAuthChanged();
+                router.push("/");
             } else {
                 toast.error(data.message || "فشل تسجيل الدخول");
             }
@@ -127,15 +133,19 @@ export default function LoginForm() {
                 </button>
             </form>
 
-            <div className="flex items-center w-full my-4 gap-3">
-                <div className="flex-1 h-px bg-gray-300" />
-                <span className="text-xs text-gray-400 whitespace-nowrap">أو عن طريق</span>
-                <div className="flex-1 h-px bg-gray-300" />
-            </div>
+            {isGoogleLoginEnabled && (
+                <>
+                    <div className="flex items-center w-full my-4 gap-3">
+                        <div className="flex-1 h-px bg-gray-300" />
+                        <span className="text-xs text-gray-400 whitespace-nowrap">أو عن طريق</span>
+                        <div className="flex-1 h-px bg-gray-300" />
+                    </div>
 
-            <div className="w-full" dir="ltr">
-                <SocialLoginButton />
-            </div>
+                    <div className="w-full" dir="ltr">
+                        <SocialLoginButton />
+                    </div>
+                </>
+            )}
 
             <p className="w-full mt-4 text-[13px] text-[#6B4E45] font-medium text-center">
                 ليس لديك حساب؟{" "}

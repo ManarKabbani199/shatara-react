@@ -538,7 +538,9 @@ class _ChessBoardState extends State<ChessBoard> {
   late int playerTimeRemaining;
   late int aiTimeRemaining;
 
-  bool isBoardFlipped = false;
+  /// 🧭 اتجاه الرقعة يُشتق تلقائيًا من لون اللاعب: اللاعب دائمًا في الأسفل
+  /// (أُزيل زر التدوير اليدوي — لا حاجة له بعد الآن)
+  bool get isBoardFlipped => playerColor == PlayerColor.black;
   int moveTimeLimitSeconds = 300;
 
   String? selectedLevel;
@@ -647,7 +649,8 @@ class _ChessBoardState extends State<ChessBoard> {
 
   late PlayerColor currentPlayerColor;
   late PlayerColor aiColor;
-  late PlayerColor playerColor;
+  // افتراضي أبيض لتفادي LateInitializationError في أول بناء قبل اختيار اللون
+  late PlayerColor playerColor = PlayerColor.white;
   bool isSinglePlayerMode = false;
 
   /// ✅ دالة لإعادة ضبط حقوق التبييت في movePce.dart عند بداية كل لعبة
@@ -2279,6 +2282,9 @@ class _ChessBoardState extends State<ChessBoard> {
       updateCastlingRights(selectedRow!, selectedCol!, movingPiece);
     }
 
+    // 🏆 القطعة المأسورة في هذه النقلة (لاحتساب النقاط في سجل النقلات)
+    ChessPiece? capturedPiece;
+
     setState(() {
       // 🟤 أكل بالمرور
       if (movingPiece != null &&
@@ -2289,6 +2295,7 @@ class _ChessBoardState extends State<ChessBoard> {
           enPassantTarget == Offset(row.toDouble(), col.toDouble())) {
         int capturedRow =
             movingPiece.color == PlayerColor.white ? row + 1 : row - 1;
+        capturedPiece = board[capturedRow][col];
         board[capturedRow][col] = null;
       }
 
@@ -2298,7 +2305,7 @@ class _ChessBoardState extends State<ChessBoard> {
           (col - selectedCol!).abs() == 2) {
         _performCastling(movingPiece, row, col);
       } else {
-        final temp = board[row][col];
+        capturedPiece ??= board[row][col];
         board[row][col] = movingPiece;
         board[selectedRow!][selectedCol!] = null;
         movingPiece?.hasMoved = true;
@@ -2315,14 +2322,15 @@ class _ChessBoardState extends State<ChessBoard> {
       _updateEnPassantTarget(movingPiece, selectedRow!, row, col);
 
       if (movingPiece != null) {
-        final pieceSymbol = _getPieceSymbol(movingPiece);
         final moveNotation =
-            '$pieceSymbol ${_getSquareName(selectedRow!, selectedCol!)}-${_getSquareName(row, col)}';
+            '${_getPieceName(movingPiece.type)} ${_getSquareName(selectedRow!, selectedCol!)}-${_getSquareName(row, col)}';
         movesHistory.add(_MoveLogEntry(
           label: moveNotation,
           from: _getSquareName(selectedRow!, selectedCol!),
           to: _getSquareName(row, col),
           isWhite: movingColor == PlayerColor.white,
+          pieceAsset: _getPieceAsset(movingPiece),
+          points: capturedPiece != null ? _piecePoints(capturedPiece!.type) : 0,
         ));
 
         final localMoveType = movingPiece.type == PieceType.king &&
@@ -2580,8 +2588,8 @@ class _ChessBoardState extends State<ChessBoard> {
     if (allMoves.isEmpty) {
       if (isKingInCheck(aiMovingColor, board)) {
         _showError(aiMovingColor == PlayerColor.white
-            ? '♔ كش مات للأبيض!'
-            : '♚ كش مات للأسود!');
+            ? 'كش مات للأبيض!'
+            : 'كش مات للأسود!');
       } else {
         _showError('🤝 تعادل (جمود)');
       }
@@ -2651,6 +2659,9 @@ class _ChessBoardState extends State<ChessBoard> {
     // 📸 لقطة لخاصية التراجع (وضع الحملة)
     _pushSnapshot(aiMovingColor);
 
+    // 🏆 القطعة المأسورة في نقلة الخصم (لاحتساب النقاط)
+    final aiCapturedPiece = board[toRow][toCol];
+
     // الحركة الأساسية
     setState(() {
       board[toRow][toCol] = movedPiece;
@@ -2674,13 +2685,16 @@ class _ChessBoardState extends State<ChessBoard> {
     /// 📝 تسجيل الحركة
     /// ========================
     final moveNotation =
-        '${_getPieceSymbol(movedPiece)} ${_getSquareName(fromRow, fromCol)}-${_getSquareName(toRow, toCol)}';
+        '${_getPieceName(movedPiece.type)} ${_getSquareName(fromRow, fromCol)}-${_getSquareName(toRow, toCol)}';
 
     movesHistory.add(_MoveLogEntry(
       label: moveNotation,
       from: _getSquareName(fromRow, fromCol),
       to: _getSquareName(toRow, toCol),
       isWhite: aiMovingColor == PlayerColor.white,
+      pieceAsset: _getPieceAsset(movedPiece),
+      points:
+          aiCapturedPiece != null ? _piecePoints(aiCapturedPiece.type) : 0,
     ));
 
     await _saveMoveToFirestore(
@@ -3080,6 +3094,8 @@ class _ChessBoardState extends State<ChessBoard> {
         label: 'إدخال بيدق من الدعم إلى ${_getSquareName(fromRow, fromCol)}',
         to: _getSquareName(fromRow, fromCol),
         isWhite: color == PlayerColor.white,
+        pieceAsset:
+            'assets/images/${_getAssetName(PieceType.pawn, color)}',
       ));
 
       // ✅ مهم جداً: حفظ إدخال البيدق في الشبكي
@@ -3167,6 +3183,7 @@ class _ChessBoardState extends State<ChessBoard> {
     movesHistory.add(_MoveLogEntry(
       label: 'ترقية ${_getPieceName(piece.type)} إلى ${_getPieceName(newType)}',
       isWhite: piece.color == PlayerColor.white,
+      pieceAsset: 'assets/images/${_getAssetName(newType, piece.color)}',
     ));
 
     if (_isLocalFriendMode) {
@@ -3693,12 +3710,15 @@ class _ChessBoardState extends State<ChessBoard> {
                                   ),
                                   const SizedBox(width: 6),
                                   _roundIconButton(
-                                    icon: Icons.flip,
-                                    tooltip: 'تدوير الرقعة',
+                                    icon: Icons.home,
+                                    tooltip: 'الرئيسية',
                                     onTap: () {
-                                      setState(() {
-                                        isBoardFlipped = !isBoardFlipped;
-                                      });
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => Home()),
+                                        (route) => false,
+                                      );
                                     },
                                   ),
                                 ],
@@ -3766,35 +3786,6 @@ class _ChessBoardState extends State<ChessBoard> {
                         ),
                       ),
 
-                      // 🔹 الأسفل: الفوتر
-                      Container(
-                        width: double.infinity,
-                        color: const Color(0xFFEFE8F2),
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '© 2025 جميع الحقوق محفوظة لشطارة شطرنج',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Alexandria',
-                                color: Color(0xFF6B4E45),
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Shatara Chess',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Alexandria',
-                                color: Color(0xFFAB86B9),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -3979,17 +3970,45 @@ class _ChessBoardState extends State<ChessBoard> {
               );
               // 🧩 بطاقة منطقة دعم واحدة (تصميم الماكيت: بطاقة فاتحة مستديرة)
               Widget supportCard(PlayerColor color) {
+                final isPlayerCard = color == playerColor;
                 return Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: GameUiColors.pillFill,
                     borderRadius: BorderRadius.circular(18),
                   ),
-                  child: _buildSupportPanelMobile(color, tileSize * 0.8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        isPlayerCard ? 'قطعك الاحتياطية' : 'قطع الخصم',
+                        style: const TextStyle(
+                          fontFamily: 'Alexandria',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: GameUiColors.darkText,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      _buildSupportPanelMobile(color, tileSize * 0.62),
+                    ],
+                  ),
                 );
               }
 
-              // ◀ العمود الأيسر: ساعة الخصم + سجل النقلات + الأزرار + اسم اللاعب
+              // 🔸 فاصل بين منطقتي الدعم (الخصم / اللاعب)
+              Widget supportDivider() {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: GameUiColors.primaryPurple.withOpacity(0.4),
+                  ),
+                );
+              }
+
+              // ◀ العمود الأيسر: ساعة الخصم + سجل النقلات + الدعم + الأزرار + اسم اللاعب
               Widget leftColumn = SizedBox(
                 width: tileSize * 3.4,
                 height: tileSize * 10,
@@ -4002,6 +4021,15 @@ class _ChessBoardState extends State<ChessBoard> {
                       child: _movesLogCard(width: tileSize * 3.4),
                     ),
                     const SizedBox(height: 10),
+                    // 🧩 القطع الاحتياطية/المأسورة يسار الرقعة بعد سجل النقلات
+                    supportCard(isBoardFlipped
+                        ? PlayerColor.white
+                        : PlayerColor.black),
+                    supportDivider(),
+                    supportCard(isBoardFlipped
+                        ? PlayerColor.black
+                        : PlayerColor.white),
+                    const SizedBox(height: 10),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: _actionPillsRow(),
@@ -4012,7 +4040,7 @@ class _ChessBoardState extends State<ChessBoard> {
                 ),
               );
 
-              // ▶ العمود الأيمن: اسم الخصم + إعدادات/تدوير + الدعم + ساعة اللاعب
+              // ▶ العمود الأيمن: اسم الخصم + إعدادات/الرئيسية + ساعة اللاعب
               Widget rightColumn = SizedBox(
                 width: tileSize * 3.4,
                 height: tileSize * 10,
@@ -4033,12 +4061,15 @@ class _ChessBoardState extends State<ChessBoard> {
                               ),
                               const SizedBox(width: 8),
                               _roundIconButton(
-                                icon: Icons.flip,
-                                tooltip: 'تدوير الرقعة',
+                                icon: Icons.home,
+                                tooltip: 'الرئيسية',
                                 onTap: () {
-                                  setState(() {
-                                    isBoardFlipped = !isBoardFlipped;
-                                  });
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()),
+                                    (route) => false,
+                                  );
                                 },
                               ),
                             ],
@@ -4049,13 +4080,6 @@ class _ChessBoardState extends State<ChessBoard> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    supportCard(isBoardFlipped
-                        ? PlayerColor.white
-                        : PlayerColor.black),
-                    const SizedBox(height: 10),
-                    supportCard(isBoardFlipped
-                        ? PlayerColor.black
-                        : PlayerColor.white),
                     const Spacer(),
                     Align(
                       alignment: Alignment.centerRight,
@@ -4241,37 +4265,20 @@ class _ChessBoardState extends State<ChessBoard> {
   }
 
   // دوال مساعدة
-  String _getPieceSymbol(ChessPiece piece) {
-    if (piece.color == PlayerColor.white) {
-      switch (piece.type) {
-        case PieceType.king:
-          return '♔';
-        case PieceType.queen:
-          return '♕';
-        case PieceType.rook:
-          return '♖';
-        case PieceType.bishop:
-          return '♗';
-        case PieceType.knight:
-          return '♘';
-        case PieceType.pawn:
-          return '♙';
-      }
-    } else {
-      switch (piece.type) {
-        case PieceType.king:
-          return '♚';
-        case PieceType.queen:
-          return '♛';
-        case PieceType.rook:
-          return '♜';
-        case PieceType.bishop:
-          return '♝';
-        case PieceType.knight:
-          return '♞';
-        case PieceType.pawn:
-          return '♟';
-      }
+  /// 🏆 نقاط المادة لكل نوع قطعة (للتقييمات والبطولات)
+  int _piecePoints(PieceType type) {
+    switch (type) {
+      case PieceType.queen:
+        return 9;
+      case PieceType.rook:
+        return 5;
+      case PieceType.bishop:
+      case PieceType.knight:
+        return 3;
+      case PieceType.pawn:
+        return 1;
+      case PieceType.king:
+        return 0;
     }
   }
 
@@ -4281,8 +4288,15 @@ class _ChessBoardState extends State<ChessBoard> {
     return '$columnLetter$rowNumber';
   }
 
-  /// 📝 بطاقة سجل النقلات (تصميم الماكيت)
+  /// 📝 بطاقة سجل النقلات (تصميم الماكيت) مع مجموع نقاط المادة
   Widget _movesLogCard({required double width}) {
+    final whitePoints = movesHistory
+        .where((e) => e.isWhite)
+        .fold<int>(0, (sum, e) => sum + e.points);
+    final blackPoints = movesHistory
+        .where((e) => !e.isWhite)
+        .fold<int>(0, (sum, e) => sum + e.points);
+
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -4302,6 +4316,17 @@ class _ChessBoardState extends State<ChessBoard> {
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: GameUiColors.darkText,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // 🏆 مجموع نقاط المادة لكل لاعب (للتقييمات والبطولات)
+          Text(
+            'أبيض +$whitePoints · أسود +$blackPoints',
+            style: const TextStyle(
+              fontFamily: 'Alexandria',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: GameUiColors.primaryPurple,
             ),
           ),
           const SizedBox(height: 10),
@@ -4324,7 +4349,7 @@ class _ChessBoardState extends State<ChessBoard> {
     );
   }
 
-  /// 📝 صف واحد في سجل النقلات: من · إلى · رقم الحركة
+  /// 📝 صف واحد في سجل النقلات: رقم · أيقونة القطعة · من ← إلى · نقاط الأسر
   Widget _moveLogRow(int index, _MoveLogEntry entry) {
     const cellStyle = TextStyle(
       fontWeight: FontWeight.bold,
@@ -4332,6 +4357,29 @@ class _ChessBoardState extends State<ChessBoard> {
       color: GameUiColors.darkText,
     );
     final moveNumber = (index ~/ 2) + 1;
+
+    final Widget? pieceIcon = entry.pieceAsset == null
+        ? null
+        : SvgPicture.asset(entry.pieceAsset!, width: 18, height: 18);
+
+    final Widget? pointsBadge = entry.points > 0
+        ? Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: GameUiColors.primaryPurple,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '+${entry.points}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        : null;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 3),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -4340,17 +4388,38 @@ class _ChessBoardState extends State<ChessBoard> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: (entry.from == null && entry.to == null)
-          ? Text(
-              entry.label,
-              style: cellStyle,
-              overflow: TextOverflow.ellipsis,
+          ? Row(
+              children: [
+                if (pieceIcon != null) ...[
+                  pieceIcon,
+                  const SizedBox(width: 6),
+                ],
+                Expanded(
+                  child: Text(
+                    entry.label,
+                    style: cellStyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (pointsBadge != null) pointsBadge,
+              ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(entry.from ?? '—', style: cellStyle),
-                Text(entry.to ?? '—', style: cellStyle),
-                Text('$moveNumber.', style: cellStyle),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('$moveNumber.', style: cellStyle),
+                    if (pieceIcon != null) ...[
+                      const SizedBox(width: 6),
+                      pieceIcon,
+                    ],
+                    const SizedBox(width: 6),
+                    Text('${entry.from} ← ${entry.to}', style: cellStyle),
+                  ],
+                ),
+                if (pointsBadge != null) pointsBadge,
               ],
             ),
     );
@@ -4383,7 +4452,7 @@ class _ChessBoardState extends State<ChessBoard> {
           const SizedBox(width: 8),
           const Icon(
             Icons.access_time_filled,
-            color: Color(0xFF6B4E45),
+            color: GameUiColors.primaryPurple,
             size: 20,
           ),
         ],
@@ -4609,13 +4678,9 @@ class _ChessBoardState extends State<ChessBoard> {
                 DropdownMenuItem(
                     value: 'board_image', child: Text('أرجواني (صورة)')),
                 DropdownMenuItem(
-                    value: 'brown', child: Text('بني كلاسيكي')),
-                DropdownMenuItem(
                     value: 'black_white', child: Text('أبيض / أسود')),
                 DropdownMenuItem(
                     value: 'blue_white', child: Text('أبيض / أزرق')),
-                DropdownMenuItem(
-                    value: 'brown_modern', child: Text('بني حديث')),
               ],
               onChanged: (v) {
                 setState(() {
@@ -4813,7 +4878,7 @@ class _HoverDrawerItemState extends State<_HoverDrawerItem> {
     } else if (widget.isSpecialActive) {
       if (widget.isAnyHovering) {
         backgroundColor = Colors.transparent;
-        textColor = const Color(0xFF6B4E45);
+        textColor = GameUiColors.darkText;
       } else {
         backgroundColor = const Color(0xFFAB86B9);
         textColor = Colors.white;
@@ -4824,7 +4889,7 @@ class _HoverDrawerItemState extends State<_HoverDrawerItem> {
         textColor = Colors.white;
       } else {
         backgroundColor = Colors.transparent;
-        textColor = const Color(0xFF6B4E45);
+        textColor = GameUiColors.darkText;
       }
     }
 
@@ -4872,18 +4937,26 @@ class _HoverDrawerItemState extends State<_HoverDrawerItem> {
   }
 }
 
-/// 📝 عنصر في سجل النقلات (تصميم الماكيت: من · إلى · رقم الحركة)
+/// 📝 عنصر في سجل النقلات (تصميم الماكيت: رقم · قطعة · من · إلى · نقاط)
 class _MoveLogEntry {
-  /// نص الحركة الكامل (مثال: ♞ C F6-F3) أو وصف خاص (دعم/ترقية)
+  /// وصف الحركة (مثال: 'حصان f6-f3') أو وصف خاص (دعم/ترقية)
   final String label;
   final String? from;
   final String? to;
   final bool isWhite;
+
+  /// مسار أيقونة القطعة (SVG) المعروضة في السجل بدل رموز Unicode
+  final String? pieceAsset;
+
+  /// نقاط المادة المكتسبة من أسر قطعة في هذه النقلة (0 إن لم يوجد أسر)
+  final int points;
 
   const _MoveLogEntry({
     required this.label,
     this.from,
     this.to,
     required this.isWhite,
+    this.pieceAsset,
+    this.points = 0,
   });
 }

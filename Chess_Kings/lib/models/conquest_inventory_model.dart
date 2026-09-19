@@ -29,8 +29,8 @@ class ConquestInventoryModel {
     this.undos = 0,
     this.xpBoostBattles = 0,
     this.coinBoostBattles = 0,
-    this.ownedThemes = const ['brown'],
-    this.selectedTheme = 'brown',
+    this.ownedThemes = const ['purple'],
+    this.selectedTheme = 'purple',
   });
 
   ConquestInventoryModel copyWith({
@@ -73,8 +73,8 @@ class ConquestInventoryModel {
       xpBoostBattles: (map['xpBoostBattles'] as num?)?.toInt() ?? 0,
       coinBoostBattles: (map['coinBoostBattles'] as num?)?.toInt() ?? 0,
       ownedThemes:
-          List<String>.from(map['ownedThemes'] as List? ?? const ['brown']),
-      selectedTheme: map['selectedTheme'] as String? ?? 'brown',
+          List<String>.from(map['ownedThemes'] as List? ?? const ['purple']),
+      selectedTheme: map['selectedTheme'] as String? ?? 'purple',
     );
   }
 

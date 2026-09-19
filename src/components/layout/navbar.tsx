@@ -4,11 +4,11 @@ import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { MdLogin, MdLogout, MdClose } from 'react-icons/md';
 import { URLS } from '@/config/constants';
-import { useAuthState } from '@/features/auth/hooks/use-auth-state';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { isLoggedIn, logout } = useAuthState();
+  const { isLoggedIn, logout } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

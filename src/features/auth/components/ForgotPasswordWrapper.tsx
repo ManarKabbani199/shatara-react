@@ -1,24 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import LoginInput from "@/features/auth/login/components/LoginInput";
+import { CONTACT } from "@/config/constants";
 
 export default function ForgotPasswordWrapper() {
-    const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setMessage("إذا كان البريد الإلكتروني مسجلاً لدينا، فستتلقى رابطاً لإعادة تعيين كلمة المرور.");
-            setLoading(false);
-        }, 1000);
-    };
 
     return (
         <div className="w-full min-h-screen flex items-center justify-center relative overflow-hidden bg-white lg:bg-[url('/assets/images/login-bg.webp')] lg:bg-cover lg:bg-center lg:bg-no-repeat">
@@ -47,32 +34,14 @@ export default function ForgotPasswordWrapper() {
 
                         <div className="w-full text-center mb-5">
                             <h1 className="text-[18px] font-bold mb-2 leading-snug" style={{ color: "#6B4E45" }}>نسيت كلمة المرور</h1>
-                            <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور</p>
+                            <p className="text-[14px] leading-6" style={{ color: "#6B4E45" }}>
+                                استعادة كلمة المرور عبر البريد الإلكتروني غير متاحة حالياً.
+                                لإعادة تعيين كلمة المرور، تواصل معنا على{" "}
+                                <a href={`mailto:${CONTACT.email}`} className="font-bold hover:underline" style={{ color: "#AB86B9" }}>
+                                    {CONTACT.email}
+                                </a>
+                            </p>
                         </div>
-
-                        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3" noValidate>
-                            <LoginInput
-                                icon="username"
-                                type="email"
-                                placeholder="البريد الإلكتروني"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-
-                            {message && (
-                                <p className="text-sm text-center font-bold" style={{ color: "#06AC2A" }}>{message}</p>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-60"
-                                style={{ backgroundColor: "#AB86B9" }}
-                            >
-                                {loading ? "جاري الإرسال..." : "إرسال رابط الاستعادة"}
-                            </button>
-                        </form>
 
                         <div className="w-full mt-6 text-center">
                             <Link href="/login" className="text-sm font-bold hover:underline" style={{ color: "#6B4E45" }}>العودة لتسجيل الدخول</Link>
